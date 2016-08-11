@@ -6,6 +6,7 @@
 const app = require('../server');
 const test = require('tape');
 const Bot = require('../api/models/Bot');
+const BotController = require('../api/controllers/BotController');
 const asyncFn = require('asyncawait/async');
 const awaitFn = require('asyncawait/await');
 
@@ -25,21 +26,20 @@ test('Checking if DB is empty', asyncFn(t => {
 	t.end();
 }));
 
-test('Creating first bot', asyncFn(t => {
-	const bot = new Bot(botData);
-	awaitFn(bot.save());
+test('Creating bot', asyncFn(t => {
+	const createdBot = awaitFn(BotController.createOrFindBot(botData));
+	t.ok(createdBot, 'A bot should be created');
 	const foundBot = awaitFn(Bot.findOne());
-	t.equal(foundBot.twitterID, bot.twitterID, 'Bot found in db should be saved bot');
+	t.ok(foundBot, 'A bot should be found in db');
+	t.equal(foundBot.twitterID, botData.twitterID, 'Bot found in db should be saved bot');
 	t.end();
 }));
 
-test('Creating same bot again', asyncFn(t => {
-	try {
-		const bot = new Bot(botData);
-		awaitFn(bot.save());
-	} catch (err) {
-		t.ok(err, 'Should return an error: no duplicates allowed');
-	}
+test('Creating bot again', asyncFn(t => {
+	const createdBot = awaitFn(BotController.createOrFindBot(botData));
+	t.ok(createdBot, 'A bot should be returned');
+	const allBots = awaitFn(Bot.find());
+	t.equal(allBots.length, 1, 'There should be only 1 bot (no new bots created)');
 	t.end();
 }));
 

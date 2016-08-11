@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const DonationSchema = new Schema({
-	// Twitter User ID donating
+	// Twitter user ID donating
 	fromTwitterID: {
 		type: String,
 		default: '',
