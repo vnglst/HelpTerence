@@ -10,7 +10,13 @@ const T = new Twit({
 
 // Private functions
 
-function handleDonation(text) {
+function handleDonation(tweet) {
+	const text = tweet.text;
+	// Get donation count
+	// Get user Id
+	// Save donation
+	// Create a thank you string
+	// Tweet string
 	const count = text.split('💰')
 		.length - 1;
 	console.log(`[Bot] Thanks for donating ${count} money bags! 👍`);
@@ -23,8 +29,8 @@ function handleStatus() {
 function handleMention(tweet) {
 	const text = tweet.text;
 	console.log(`[Bot] Somebody mentioned me in the following tweet:\n ${text}`);
-	if (text.includes('💰')) handleDonation(text);
-	if (text.include('status')) handleStatus();
+	if (text.includes('💰')) handleDonation(tweet);
+	if (text.includes('status')) handleStatus();
 }
 
 // Public functions
@@ -57,6 +63,8 @@ exports.listen = () => {
 };
 
 // Exports for tests
-exports.__tests.handleMention = handleMention;
-exports.__tests.handleStatus = handleStatus;
-exports.__tests.handleDonation = handleDonation;
+const __tests = {};
+__tests.handleMention = handleMention;
+__tests.handleStatus = handleStatus;
+__tests.handleDonation = handleDonation;
+exports.__tests = __tests;
