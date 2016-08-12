@@ -1,3 +1,4 @@
+require('console.table');
 const asyncFn = require('asyncawait/async');
 const awaitFn = require('asyncawait/await');
 const Twit = require('twit');
@@ -17,7 +18,7 @@ exports.login = asyncFn(() => {
 				skip_status: true,
 			}));
 		if (result.data.errors) {
-			console.log(result.data.errors);
+			console.table('\nError loading bot!', result.data.errors);
 		} else {
 			console.log(`Bot "${result.data.name}" succesfully loaded!`);
 		}
