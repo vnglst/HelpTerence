@@ -11,6 +11,7 @@ require('dotenv')
 const express = require('express');
 const mongoose = require('mongoose');
 const config = require('./config');
+const bot = require('./bot/bot');
 
 const port = process.env.PORT || 3000;
 const app = express();
@@ -41,3 +42,5 @@ connect()
 	.on('error', console.log)
 	.on('disconnected', connect)
 	.once('open', listen);
+
+bot.login();
