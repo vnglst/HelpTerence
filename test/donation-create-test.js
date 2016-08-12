@@ -2,7 +2,6 @@
  * Tests donation creation function
  */
 
-/* eslint no-unused-vars: ["error", { "varsIgnorePattern": "app" }] */
 const app = require('../server');
 const test = require('tape');
 const Bot = require('../api/models/Bot');

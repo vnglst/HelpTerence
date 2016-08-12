@@ -1,5 +1,3 @@
-const asyncFn = require('asyncawait/async');
-const awaitFn = require('asyncawait/await');
 const Twit = require('twit');
 
 const T = new Twit({
@@ -10,14 +8,26 @@ const T = new Twit({
 	timeout_ms: 60 * 1000,
 });
 
-function handleMention(tweet) {
-	console.log(`\ntweet: ${tweet.text}`);
-	if (tweet.text.includes('💰')) {
-		const count = tweet.text.split('💰')
-			.length - 1;
-		console.log(`Thanks for donating ${count} money bags! 👍 `);
-	}
+// Private functions
+
+function handleDonation(text) {
+	const count = text.split('💰')
+		.length - 1;
+	console.log(`[Bot] Thanks for donating ${count} money bags! 👍`);
 }
+
+function handleStatus() {
+	console.log('[Bot] Still going strong, thanks!');
+}
+
+function handleMention(tweet) {
+	const text = tweet.text;
+	console.log(`[Bot] Somebody mentioned me in the following tweet:\n ${text}`);
+	if (text.includes('💰')) handleDonation(text);
+	if (text.include('status')) handleStatus();
+}
+
+// Public functions
 
 exports.listen = () => {
 	const stream = T.stream('statuses/filter', {
@@ -45,3 +55,8 @@ exports.listen = () => {
 		console.log('[Bot] Disconnected from stream.');
 	});
 };
+
+// Exports for tests
+exports.__tests.handleMention = handleMention;
+exports.__tests.handleStatus = handleStatus;
+exports.__tests.handleDonation = handleDonation;
