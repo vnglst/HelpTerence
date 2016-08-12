@@ -1,4 +1,3 @@
-require('console.table');
 const asyncFn = require('asyncawait/async');
 const awaitFn = require('asyncawait/await');
 const Twit = require('twit');
@@ -11,18 +10,38 @@ const T = new Twit({
 	timeout_ms: 60 * 1000,
 });
 
-exports.login = asyncFn(() => {
-	try {
-		const result = awaitFn(
-			T.get('account/verify_credentials', {
-				skip_status: true,
-			}));
-		if (result.data.errors) {
-			console.table('\nError loading bot!', result.data.errors);
-		} else {
-			console.log(`Bot "${result.data.name}" succesfully loaded!`);
-		}
-	} catch (err) {
-		console.log('caught error', err.stack);
+function handleMention(tweet) {
+	console.log(`\ntweet: ${tweet.text}`);
+	if (tweet.text.includes('💰')) {
+		const count = tweet.text.split('💰')
+			.length - 1;
+		console.log(`Thanks for donating ${count} money bags! 👍 `);
 	}
-});
+}
+
+exports.listen = () => {
+	const stream = T.stream('statuses/filter', {
+		track: ['@HelpTerence'],
+	});
+
+	stream.on('connected', () => {
+		console.log('[Bot] Connected to stream. Listening...');
+	});
+
+	stream.on('tweet', handleMention);
+
+	stream.on('reconnecting', (req, res, connectInterval) => {
+		console.log('[Bot] Got disconnected. Scheduling reconnect! statusCode:',
+			res.statusCode,
+			'connectInterval',
+			connectInterval);
+	});
+
+	stream.on('error', (err) => {
+		console.log('[Bot] Stream emitted an error', err);
+	});
+
+	stream.on('disconnected', () => {
+		console.log('[Bot] Disconnected from stream.');
+	});
+};

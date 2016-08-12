@@ -23,10 +23,11 @@ module.exports = app;
 function listen() {
 	if (app.get('env') === 'test') return;
 	app.listen(port);
-	console.log(`Express app started on port ${port}`);
+	console.log(`[Express] App started on port ${port}`);
+	bot.listen();
 }
 
-function connect() {
+function connectToDB() {
 	const options = {
 		server: {
 			socketOptions: {
@@ -38,9 +39,7 @@ function connect() {
 		.connection;
 }
 
-connect()
+connectToDB()
 	.on('error', console.log)
-	.on('disconnected', connect)
+	.on('disconnected', connectToDB)
 	.once('open', listen);
-
-bot.login();
