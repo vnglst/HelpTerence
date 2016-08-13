@@ -22,15 +22,41 @@ function handleDonation(tweet) {
 	console.log(`[Bot] Thanks for donating ${count} money bags! 👍`);
 }
 
-function handleStatus() {
-	console.log('[Bot] Still going strong, thanks!');
+function format(seconds) {
+	function pad(s) {
+		return (s < 10 ? '0' : '') + s;
+	}
+	const hours = Math.floor(seconds / (60 * 60));
+	const minutes = Math.floor((seconds % (60 * 60)) / 60);
+	const secs = Math.floor(seconds % 60);
+	return `${pad(hours)} : ${pad(minutes)} : ${pad(secs)}`;
+}
+
+function getStatusStr(tweet) {
+	const uptime = format(process.uptime());
+	const replyTo = tweet.user.screen_name;
+	return `@${replyTo} still going strong, thanks for asking! Uptime: ${uptime}`;
+}
+
+function handleStatus(tweet) {
+	const status = getStatusStr(tweet);
+	const params = {
+		status,
+	};
+	T.post('statuses/update', params, (err, reply) => {
+		if (err) {
+			console.log('[Bot] Error:', err);
+		} else {
+			console.log('[Bot] Tweeted:', reply.text);
+		}
+	});
 }
 
 function handleMention(tweet) {
 	const text = tweet.text;
 	console.log(`[Bot] Somebody mentioned me in the following tweet:\n ${text}`);
 	if (text.includes('💰')) handleDonation(tweet);
-	if (text.includes('status')) handleStatus();
+	if (text.includes('status')) handleStatus(tweet);
 }
 
 // Public functions

@@ -27,7 +27,7 @@
   },
   "scripts": {
     "test": "export NODE_ENV=test; node test/*-test.js | tap-spec",
-    "watch:test": "export NODE_ENV=test; nodemon test/donation-create-test.js | faucet",
+    "watch:test": "export NODE_ENV=test; nodemon test/bot-test.js",
     "start": "export NODE_ENV=development; nodemon server.js",
     "debug": "export NODE_ENV=development; nodemon --debug server.js"
   },
