@@ -35,4 +35,27 @@ test('Creating and deleting status Tweet', t => {
 	});
 });
 
+test('Creating and deleting a donation Tweet', t => {
+	let tweetId = null;
+	const params = {
+		status: '@helpterence here some money bags 💰💰💰💰!',
+	};
+
+	T.post('statuses/update', params, (err, reply, response) => {
+		console.log('\ntweeted:', reply.text);
+		tweetId = reply.id_str;
+		t.ok(tweetId);
+		t.ok(response);
+		const deleteParams = {
+			id: tweetId,
+		};
+
+		T.post('statuses/destroy/:id', deleteParams, (delErr, body, delResponse) => {
+			t.notOk(delErr);
+			t.ok(delResponse);
+			t.end();
+		});
+	});
+});
+
 test.onFinish(() => process.exit(0));

@@ -25,6 +25,6 @@ exports.createDonation = asyncFn((donationData) => {
 	const donation = new Donation(donationData);
 	const bot = awaitFn(Bot.findOne());
 	bot.money += donation.money;
-	awaitFn(bot.save());
-	return awaitFn(donation.save());
+	awaitFn(donation.save());
+	return awaitFn(bot.save());
 });

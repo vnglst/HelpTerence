@@ -34,10 +34,11 @@ test('Clean up', cleanup);
 test('Creating donation',
 	asyncFn(t => {
 		awaitFn(BotController.createOrFindBot(botData));
-		const createdDonation = awaitFn(
+		const donatee = awaitFn(
 			DonationController
 			.createDonation(donationData));
-		t.ok(createdDonation, 'A donation should be created');
+		t.ok(donatee, 'A donation should be created');
+		t.ok(donatee.twitterID, 'The donatee should be our bot');
 		const bot = awaitFn(Bot.findOne());
 		t.ok(bot, 'A bot should be found in db');
 		t.equal(bot.money, 10, 'Bot should have 10 monies');

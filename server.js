@@ -10,22 +10,31 @@ require('dotenv')
 	.config();
 const express = require('express');
 const mongoose = require('mongoose');
+const asyncFn = require('asyncawait/async');
+const awaitFn = require('asyncawait/await');
+
 const config = require('./config');
 const bot = require('./bot/bot');
+const BotController = require('./api/controllers/BotController');
 
 const port = process.env.PORT || 3000;
 const app = express();
+
+const botData = {
+	twitterID: 'HelpTerence',
+};
 
 mongoose.Promise = global.Promise;
 
 module.exports = app;
 
-function listen() {
+const listen = asyncFn(() => {
 	if (app.get('env') === 'test') return;
 	app.listen(port);
 	console.log(`[Express] App started on port ${port}`);
+	awaitFn(BotController.createOrFindBot(botData));
 	bot.listen();
-}
+});
 
 function connectToDB() {
 	const options = {
