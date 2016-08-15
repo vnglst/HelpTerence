@@ -3,7 +3,7 @@ const asyncFn = require('asyncawait/async');
 const awaitFn = require('asyncawait/await');
 
 exports.createOrFindBot = asyncFn((botData) => {
-	console.log('[App] Creating or loading bot.')
+	console.log('[App] Creating or loading bot.');
 	const foundBot = awaitFn(Bot.findOne());
 	if (foundBot) return foundBot;
 	const bot = new Bot(botData);
