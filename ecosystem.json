@@ -13,6 +13,7 @@
   ],
   deploy : {
     production : {
+      "key"  : "/Users/vnglst/.ssh/id_rsa.pem",
       user : "pi",
       host : "raspberrypi.local",
       ref  : "origin/master",
