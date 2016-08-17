@@ -1,24 +1,26 @@
 {
-  apps : [
-    {
-      name      : "HelpTerence",
-      script    : "server.js",
-      env: {
-        COMMON_VARIABLE: "true"
-      },
-      env_production : {
-        NODE_ENV: "production"
-      }
+    apps: [{
+        name: "HelpTerence",
+        script: "server.js",
+        env: {
+            COMMON_VARIABLE: "true"
+        },
+        env_production: {
+            NODE_ENV: "production",
+            TWITTER_CONSUMER_KEY: "F9AE4l9jRm1L1Fa7uv7TQS33S",
+            TWITTER_CONSUMER_SECRET: "GLhdgK7xIFab7pU4IqezsjeJ9tP1IveOBOnjDJ5Yuddfyz4ioA",
+            TWITTER_ACCESS_TOKEN: "762270680696123392-5FX6fVTcbM1zPw8E9fKBr4btm0s7PcA",
+            TWITTER_ACCESS_TOKEN_SECRET: "b10xvso4T5TRZYT3bLQqhgfNfemDDS2estpqFqdnU8DuP"
+        }
+    }],
+    deploy: {
+        production: {
+            user: "pi",
+            host: "raspberrypi.local",
+            ref: "origin/master",
+            repo: "git@github.com:vnglst/HelpTerence.git",
+            path: "/var/www/HelpTerence",
+            "post-deploy": "npm install && pm2 startOrRestart ecosystem.json --env production"
+        }
     }
-  ],
-  deploy : {
-    production : {
-      user : "pi",
-      host : "raspberrypi.local",
-      ref  : "origin/master",
-      repo : "git@github.com:vnglst/HelpTerence.git",
-      path : "/var/www/HelpTerence",
-      "post-deploy" : "npm install && pm2 startOrRestart ecosystem.json --env production"
-    }
-  }
 }
