@@ -1,3 +1,3 @@
 module.exports = {
-  db: process.env.MONGOHQ_URL,
+	db: 'mongodb://localhost/help_terence',
 };
