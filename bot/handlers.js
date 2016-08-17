@@ -59,6 +59,8 @@ exports.handleDonation = asyncFn((tweet, T) => {
 		status: getDonationThanksStr(donator, count, total),
 	};
 
+	// Todo: move to tweet
+	// Syntax: tweet.reply(userHandle, message)
 	T.post('statuses/update', params, (err, reply) => {
 		if (err) {
 			console.log('[Bot] Error:', err);
