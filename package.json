@@ -28,6 +28,7 @@
   },
   "scripts": {
     "test": "export NODE_ENV=test; tape test/*-test.js | tap-spec",
+		"deploy": "pm2 deploy ecosystem.json production",
     "start": "export NODE_ENV=development; nodemon server.js",
     "debug": "export NODE_ENV=development; nodemon --debug server.js"
   },

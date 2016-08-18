@@ -59,7 +59,7 @@ exports.handleDonation = asyncFn((tweet) => {
 		return awaitFn(terence.reply(donator, message));
 	} catch (e) {
 		if (e.message === 'Donation not allowed. Already donated today!') {
-			const message = 'sorry, you already donated today. I dont want you to get poor!'
+			const message = 'sorry, you already donated today. I dont want you to get poor!';
 			return awaitFn(terence.reply(donator, message));
 		}
 	}
