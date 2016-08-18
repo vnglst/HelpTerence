@@ -1,61 +1,89 @@
-const app = require('../server');
 const test = require('tape');
-const Twit = require('twit');
-// const asyncFn = require('asyncawait/async');
-// const awaitFn = require('asyncawait/await');
+const Bot = require('../bot/bot');
+const app = require('../server');
 
-const T = new Twit({
+const config = {
 	consumer_key: process.env.TWITTER_CONSUMER_KEY,
 	consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
 	access_token: process.env.TWITTER_ACCESS_TOKEN,
 	access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET,
 	timeout_ms: 60 * 1000,
+};
+
+let bot;
+
+test('Creating bot', t => {
+	bot = new Bot(config);
+	t.pass('Bot running.');
+	t.end();
 });
 
-test('Creating and deleting status Tweet', t => {
+test('Creating and deleting a tweet', t => {
 	let tweetId = null;
-	const params = {
-		status: '@helpterence status',
-	};
+	const status = 'Hello world, this is a test tweet';
 
-	T.post('statuses/update', params, (err, reply, response) => {
-		console.log('\ntweeted:', reply.text);
-		tweetId = reply.id_str;
-		t.ok(tweetId);
-		t.ok(response);
-		const deleteParams = {
-			id: tweetId,
-		};
-
-		T.post('statuses/destroy/:id', deleteParams, (delErr, body, delResponse) => {
-			t.notOk(delErr);
-			t.ok(delResponse);
+	bot.tweet(status)
+		.then((result) => {
+			tweetId = result.data.id_str;
+			t.ok(tweetId, 'a tweet should be created');
+			return bot.destroy(tweetId);
+		})
+		.then((result) => {
+			t.ok(result, 'a tweet should be deleted');
+			t.end();
+		})
+		.catch((err) => {
+			t.notOk(err, 'there should not be an error');
+			t.comment(err);
 			t.end();
 		});
-	});
 });
 
-test('Creating and deleting a donation Tweet', t => {
-	let tweetId = null;
-	const params = {
-		status: '@helpterence here some money bags 💰💰💰💰!',
-	};
-
-	T.post('statuses/update', params, (err, reply, response) => {
-		console.log('\ntweeted:', reply.text);
-		tweetId = reply.id_str;
-		t.ok(tweetId);
-		t.ok(response);
-		const deleteParams = {
-			id: tweetId,
-		};
-
-		T.post('statuses/destroy/:id', deleteParams, (delErr, body, delResponse) => {
-			t.notOk(delErr);
-			t.ok(delResponse);
+test('Find a random tweet about bots and follow user, unfollow after that', t => {
+	bot.searchFollow({
+		q: 'bot',
+		lang: 'en',
+		count: 100,
+	})
+		.then((result) => {
+			const target = result.data.id_str;
+			t.ok(target, 'should follow user');
+			t.comment(`Following @${result.data.screen_name}`);
+			return bot.twit.post('friendships/destroy', {
+				id: target,
+			});
+		})
+		.then((result) => {
+			t.ok(result.data, 'should unfollow user');
+			t.comment(`Unfollowing @${result.data.screen_name}`);
+			t.end();
+		})
+		.catch((err) => {
+			t.notOk(err, 'there should not be an error');
+			t.comment(err);
 			t.end();
 		});
-	});
+});
+
+test('Reply to someone, delete tweet after that', t => {
+	let tweetId = null;
+	const message = 'hello there!';
+	const user = 'vnglst';
+	bot.reply(user, message)
+		.then((result) => {
+			tweetId = result.data.id_str;
+			t.ok(tweetId, 'a tweet should be created');
+			return bot.destroy(tweetId);
+		})
+		.then((result) => {
+			t.ok(result, 'a tweet should be deleted');
+			t.end();
+		})
+		.catch((err) => {
+			t.notOk(err, 'there should not be an error');
+			t.comment(err);
+			t.end();
+		});
 });
 
 test.onFinish(() => process.exit(0));

@@ -15,19 +15,18 @@ const mongoose = require('mongoose');
 const asyncFn = require('asyncawait/async');
 const awaitFn = require('asyncawait/await');
 
+const terence = require('./bot/terence');
 const config = require('./config');
-const bot = require('./bot/bot');
 const BotController = require('./api/controllers/BotController');
+
 
 const port = process.env.PORT || 3000;
 const app = express();
-
 const botData = {
 	twitterID: 'HelpTerence',
 };
 
 mongoose.Promise = global.Promise;
-
 module.exports = app;
 
 const listen = asyncFn(() => {
@@ -35,7 +34,7 @@ const listen = asyncFn(() => {
 	app.listen(port);
 	console.log(`[Express] App started on port ${port}`);
 	awaitFn(BotController.createOrFindBot(botData));
-	bot.listen();
+	terence.start();
 });
 
 function connectToDB() {

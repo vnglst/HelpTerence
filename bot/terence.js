@@ -1,157 +1,79 @@
-//
-//  Terence
-//  class for performing various twitter actions
-//
-const Twit = require('twit');
+const DonationController = require('../api/controllers/DonationController');
+const Bot = require('./bot');
+const asyncFn = require('asyncawait/async');
+const awaitFn = require('asyncawait/await');
 
-const Terence = module.exports = function defineTerence(config) {
-	this.twit = new Twit(config);
+const config = {
+	consumer_key: process.env.TWITTER_CONSUMER_KEY,
+	consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
+	access_token: process.env.TWITTER_ACCESS_TOKEN,
+	access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET,
+	timeout_ms: 60 * 1000,
 };
+const terence = new Bot(config);
 
-function randIndex(arr) {
-	const index = Math.floor(arr.length * Math.random());
-	return arr[index];
+// Private functions
+
+function format(seconds) {
+	function pad(s) {
+		return (s < 10 ? '0' : '') + s;
+	}
+	const hours = Math.floor(seconds / (60 * 60));
+	const minutes = Math.floor((seconds % (60 * 60)) / 60);
+	const secs = Math.floor(seconds % 60);
+	return `${pad(hours)}:${pad(minutes)}:${pad(secs)}`;
 }
 
-//
-//  post a tweet
-//
-Terence.prototype.tweet = function tweet(status, callback) {
-	if (typeof status !== 'string') {
-		return callback(new Error('tweet must be of type String'));
-	} else if (status.length > 140) {
-		return callback(new Error(`tweet is too long: ${status.length}`));
+function getStatusMessage() {
+	const uptime = format(process.uptime());
+	return `still going strong, thanks for asking! Uptime: ${uptime}`;
+}
+
+function getDonationMessage(count, total) {
+	const message = `thanks for donating ${count} money bags! I now have ${total} money bags! 👍`;
+	return message;
+}
+
+// Public functions
+
+exports.handleStatus = asyncFn((tweet) => {
+	const replyTo = tweet.user.screen_name;
+	const message = getStatusMessage();
+	return awaitFn(terence.reply(replyTo, message));
+});
+
+exports.handleDonation = asyncFn((tweet) => {
+	const text = tweet.text;
+	const count = text.split('💰')
+		.length - 1;
+	const donator = tweet.user.screen_name;
+	const donationData = {
+		fromTwitterID: donator,
+		createdAt: new Date(),
+		money: count,
+	};
+	try {
+		const donetee = awaitFn(DonationController.createDonation(donationData));
+		const total = donetee.money;
+		const message = getDonationMessage(count, total);
+		return awaitFn(terence.reply(donator, message));
+	} catch (e) {
+		if (e.message === 'Donation not allowed. Already donated today!') {
+			const message = 'sorry, you already donated today. I dont want you to get poor!'
+			return awaitFn(terence.reply(donator, message));
+		}
 	}
-	return this.twit.post('statuses/update', {
-		status,
-	}, callback);
+});
+
+exports.handleMention = (tweet) => {
+	const text = tweet.text;
+	console.log(`[Terence] Somebody mentioned me in the following tweet:\n ${text}`);
+	if (text.includes('💰')) exports.handleDonation(tweet);
+	if (text.includes('status')) exports.handleStatus(tweet);
 };
 
-//
-//  delete a tweet
-//
-Terence.prototype.destroy = function destroy(id, callback) {
-	return this.twit.post('statuses/destroy/:id', {
-		id,
-	}, callback);
+exports.start = () => {
+	terence.listen(exports.handleMention);
 };
 
-// choose a random tweet and follow that user
-Terence.prototype.searchFollow = function searchFollow(params, callback) {
-	const self = this;
-	return self.twit.get('search/tweets', params)
-		.then((result) => {
-			const tweets = result.data.statuses;
-			const rTweet = randIndex(tweets);
-			if (typeof rTweet !== 'undefined') {
-				const target = rTweet.user.id_str;
-
-				return self.twit.post('friendships/create', {
-					id: target,
-				}, callback);
-			}
-			return callback();
-		});
-};
-
-//
-// retweet
-//
-Terence.prototype.retweet = function retweet(params, callback) {
-	const self = this;
-
-	self.twit.get('search/tweets', params, (err, reply) => {
-		if (err) return callback(err);
-
-		const tweets = reply.statuses;
-		const randomTweet = randIndex(tweets);
-		if (typeof randomTweet !== 'undefined') {
-			return self.twit.post('statuses/retweet/:id', {
-				id: randomTweet.id_str,
-			}, callback);
-		}
-		return callback();
-	});
-};
-
-//
-// favorite a tweet
-//
-Terence.prototype.favorite = function favorite(params, callback) {
-	const self = this;
-
-	self.twit.get('search/tweets', params, (err, reply) => {
-		if (err) return callback(err);
-
-		const tweets = reply.statuses;
-		const randomTweet = randIndex(tweets);
-		if (typeof randomTweet !== 'undefined') {
-			return self.twit.post('favorites/create', {
-				id: randomTweet.id_str,
-			}, callback);
-		}
-		return callback();
-	});
-};
-
-//
-//  choose a random friend of one of your followers, and follow that user
-//
-Terence.prototype.mingle = function mingle(callback) {
-	const self = this;
-
-	this.twit.get('followers/ids', (err, reply) => {
-		if (err) {
-			return callback(err);
-		}
-
-		const followers = reply.ids;
-		const randFollower = randIndex(followers);
-
-		self.twit.get('friends/ids', {
-			user_id: randFollower,
-		}, (err, reply) => {
-			if (err) {
-				return callback(err);
-			}
-
-			const friends = reply.ids;
-			const target = randIndex(friends);
-
-			self.twit.post('friendships/create', {
-				id: target,
-			}, callback);
-		});
-	});
-};
-
-//
-//  prune your followers list; unfollow a friend that hasn't followed you back
-//
-Terence.prototype.prune = function prune(callback) {
-	const self = this;
-
-	this.twit.get('followers/ids', (err, reply) => {
-		if (err) return callback(err);
-
-		const followers = reply.ids;
-
-		self.twit.get('friends/ids', (err, reply) => {
-			if (err) return callback(err);
-
-			const friends = reply.ids;
-			let pruned = false;
-
-			while (!pruned) {
-				const target = randIndex(friends);
-
-				if (!~followers.indexOf(target)) {
-					pruned = true;
-					self.twit.post('friendships/destroy', {
-						id: target,
-					}, callback);
-				}
-			}
-		});
-	});
-};
+exports.bot = terence;

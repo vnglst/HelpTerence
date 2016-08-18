@@ -1,70 +1,82 @@
+const asyncFn = require('asyncawait/async');
+const awaitFn = require('asyncawait/await');
 const test = require('tape');
-const Terence = require('../bot/terence');
-const app = require('../server');
-// const asyncFn = require('asyncawait/async');
-// const awaitFn = require('asyncawait/await');
 
-const config = {
-	consumer_key: process.env.TWITTER_CONSUMER_KEY,
-	consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
-	access_token: process.env.TWITTER_ACCESS_TOKEN,
-	access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET,
-	timeout_ms: 60 * 1000,
+const app = require('../server');
+const terence = require('../bot/terence');
+const BotController = require('../api/controllers/BotController');
+
+const botData = {
+	twitterID: '12345',
+	money: 0,
 };
 
-let terence;
+const {
+	cleanup,
+} = require('./helper');
 
-test('Creating Terence', t => {
-	terence = new Terence(config);
-	t.pass('Terence running.');
-	t.end();
-});
+test('Clean up', cleanup);
 
-test('Creating and deleting a tweet', t => {
-	let tweetId = null;
-	const status = 'Hello world, this is a test tweet';
-
-	terence.tweet(status)
-		.then((result) => {
-			tweetId = result.data.id_str;
-			t.ok(tweetId, 'a tweet should be created');
-			return terence.destroy(tweetId);
-		})
-		.then((result) => {
-			t.ok(result, 'a tweet should be deleted');
-			t.end();
-		})
-		.catch((err) => {
-			t.notOk(err, 'there should not be an error');
-			t.comment(err);
+test('Let @vnglst ask Terence for a status report', asyncFn(t => {
+	const tweet = {
+		user: {
+			screen_name: 'vnglst',
+		},
+	};
+	const result = awaitFn(terence.handleStatus(tweet));
+	t.ok(result, 'A status reply should be tweeted');
+	const tweetId = result.data.id_str;
+	t.ok(tweetId, 'A tweet id should be found');
+	terence.bot.destroy(tweetId)
+		.then(delResult => {
+			t.ok(delResult, 'Status tweet should be deleted');
 			t.end();
 		});
-});
+}));
 
-test('Find a random tweet about bots and follow user, unfollow after that', t => {
-	terence.searchFollow({
-		q: 'bot',
-		lang: 'en',
-		count: 100,
-	})
-		.then((result) => {
-			const target = result.data.id_str;
-			t.ok(target, 'should follow user');
-			t.comment(`Following @${result.data.screen_name}`);
-			return terence.twit.post('friendships/destroy', {
-				id: target,
-			});
-		})
-		.then((result) => {
-			t.ok(result.data, 'should unfollow user');
-			t.comment(`Unfollowing @${result.data.screen_name}`);
-			t.end();
-		})
-		.catch((err) => {
-			t.notOk(err, 'there should not be an error');
-			t.comment(err);
+test('Let @vnglst donate Terence some money', asyncFn(t => {
+	const dbBot = awaitFn(BotController.createOrFindBot(botData));
+	t.ok(dbBot, 'A bot should be created in the database');
+	const tweet = {
+		text: '💰',
+		user: {
+			screen_name: 'vnglst',
+		},
+	};
+	const result = awaitFn(terence.handleDonation(tweet));
+	t.ok(result, 'A thank you tweet should be created');
+	const tweetId = result.data.id_str;
+	t.ok(tweetId, 'A tweet id should be found');
+	terence.bot.destroy(tweetId)
+		.then(delResult => {
+			t.ok(delResult, 'Thank you tweet should be deleted');
 			t.end();
 		});
-});
+}));
+
+test('Let @vnglst donate Terence some money again', asyncFn(t => {
+	const dbBot = awaitFn(BotController.createOrFindBot(botData));
+	t.ok(dbBot, 'A bot should be created in the database');
+	const tweet = {
+		text: '💰',
+		user: {
+			screen_name: 'vnglst',
+		},
+	};
+	const result = awaitFn(terence.handleDonation(tweet));
+
+	const tweetId = result.data.id_str;
+	const tweetText = result.data.text;
+	t.ok(tweetText,
+		'@vnglst sorry, you already donated today. I dont want you to get poor!',
+		'Should be a already donated tweet');
+	terence.bot.destroy(tweetId)
+		.then(delResult => {
+			t.ok(delResult, 'Already donated tweet should be deleted');
+			t.end();
+		});
+}));
+
+test('Clean up', cleanup);
 
 test.onFinish(() => process.exit(0));
