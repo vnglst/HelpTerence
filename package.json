@@ -29,7 +29,7 @@
 		"lint": "npm run lint:js",
     "lint:eslint": "eslint --ignore-path .gitignore --ignore-pattern internals/scripts",
     "lint:js": "npm run lint:eslint -- . ",
-		"deploy": "pm2 deploy ecosystem.json production",
+		"deploy": "npm run lint; pm2 deploy ecosystem.json production",
     "start": "export NODE_ENV=development; nodemon server.js",
     "debug": "export NODE_ENV=development; nodemon --debug server.js"
   },
