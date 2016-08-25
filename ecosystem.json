@@ -10,7 +10,7 @@
         }
     }],
     deploy: {
-        production-pi: {
+        productionpi: {
             user: "pi",
             host: "raspberrypi.local",
             ref: "origin/master",
@@ -21,7 +21,7 @@
                 "NODE_ENV": "production"
             }
         },
-        production-cloud: {
+        productioncloud: {
             user: "root",
             host: "term-search.nl",
             ref: "origin/master",
