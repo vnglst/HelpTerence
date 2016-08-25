@@ -3,7 +3,7 @@
         name: "HelpTerence",
         script: "server.js",
         env: {
-            COMMON_VARIABLE: "true"
+            COMMON_VARIABLE: "false"
         },
         env_production: {
             NODE_ENV: "production",
