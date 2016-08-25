@@ -35,6 +35,11 @@ function getDonationMessage(count, total) {
 	return message;
 }
 
+function handleError(err) {
+	console.error('response status:', err.statusCode);
+	console.error('data:', err.data);
+}
+
 const handleStatus = asyncFn((tweet) => {
 	const replyTo = tweet.user.screen_name;
 	const message = getStatusMessage();
@@ -77,6 +82,36 @@ const handleMention = (tweet) => {
 
 exports.start = () => {
 	bot.listen(handleMention);
+
+	// Start following and unfollowing
+	setInterval(() => {
+		bot.twit.get('followers/ids', (err, reply) => {
+			if (err) {
+				handleError(err);
+			} else console.log(`[Terence] # followers: ${reply.ids.length.toString()}`);
+		});
+
+		const rand = Math.random();
+		if (rand <= 0.70) { //  make a friend
+			bot.mingle((err, reply) => {
+				if (err) {
+					handleError(err);
+				} else {
+					const name = reply.screen_name;
+					console.log(`[Terence] Mingle: followed @${name}`);
+				}
+			});
+		} else { //  prune a friend
+			bot.prune((err, reply) => {
+				if (err) {
+					handleError(err);
+				} else {
+					const name = reply.screen_name;
+					console.log(`[Terence] Prune: unfollowed @${name}`);
+				}
+			});
+		}
+	}, 120000); // every 120 seconds
 };
 
 exports.bot = bot;
