@@ -23,7 +23,7 @@ test('Let @vnglst ask Terence for a status report', asyncFn(t => {
 			screen_name: 'vnglst',
 		},
 	};
-	const result = awaitFn(terence.handleStatus(tweet));
+	const result = awaitFn(terence.__tests.handleStatus(tweet));
 	t.ok(result, 'A status reply should be tweeted');
 	const tweetId = result.data.id_str;
 	t.ok(tweetId, 'A tweet id should be found');
@@ -43,7 +43,7 @@ test('Let @vnglst donate Terence some money', asyncFn(t => {
 			screen_name: 'vnglst',
 		},
 	};
-	const result = awaitFn(terence.handleDonation(tweet));
+	const result = awaitFn(terence.__tests.handleDonation(tweet));
 	t.ok(result, 'A thank you tweet should be created');
 	const tweetId = result.data.id_str;
 	t.ok(tweetId, 'A tweet id should be found');
@@ -63,7 +63,7 @@ test('Let @vnglst donate Terence some money again', asyncFn(t => {
 			screen_name: 'vnglst',
 		},
 	};
-	const result = awaitFn(terence.handleDonation(tweet));
+	const result = awaitFn(terence.__tests.handleDonation(tweet));
 
 	const tweetId = result.data.id_str;
 	const tweetText = result.data.text;

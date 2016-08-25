@@ -10,7 +10,8 @@ const config = {
 	access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET,
 	timeout_ms: 60 * 1000,
 };
-const terence = new Bot(config);
+
+const bot = new Bot(config);
 
 // Private functions
 
@@ -34,15 +35,13 @@ function getDonationMessage(count, total) {
 	return message;
 }
 
-// Public functions
-
-exports.handleStatus = asyncFn((tweet) => {
+const handleStatus = asyncFn((tweet) => {
 	const replyTo = tweet.user.screen_name;
 	const message = getStatusMessage();
-	return awaitFn(terence.reply(replyTo, message));
+	return awaitFn(bot.reply(replyTo, message));
 });
 
-exports.handleDonation = asyncFn((tweet) => {
+const handleDonation = asyncFn((tweet) => {
 	const text = tweet.text;
 	const count = text.split('💰')
 		.length - 1;
@@ -56,26 +55,36 @@ exports.handleDonation = asyncFn((tweet) => {
 		const donetee = awaitFn(DonationController.createDonation(donationData));
 		const total = donetee.money;
 		const message = getDonationMessage(count, total);
-		return awaitFn(terence.reply(donator, message));
+		return awaitFn(bot.reply(donator, message));
 	} catch (e) {
 		if (e.message === 'Donation not allowed. Already donated today!') {
 			const message = 'sorry, you already donated today. I dont want you to get poor!';
-			return awaitFn(terence.reply(donator, message));
+			return awaitFn(bot.reply(donator, message));
 		}
 		// Retrow all other catched errors
 		throw e;
 	}
 });
 
-exports.handleMention = (tweet) => {
+const handleMention = (tweet) => {
 	const text = tweet.text;
 	console.log(`[Terence] Somebody mentioned me in the following tweet:\n ${text}`);
-	if (text.includes('💰')) exports.handleDonation(tweet);
-	if (text.includes('status')) exports.handleStatus(tweet);
+	if (text.includes('💰')) handleDonation(tweet);
+	if (text.includes('status')) handleStatus(tweet);
 };
+
+// Public functions
 
 exports.start = () => {
-	terence.listen(exports.handleMention);
+	bot.listen(handleMention);
 };
 
-exports.bot = terence;
+exports.bot = bot;
+
+// For tests
+
+exports.__tests = {
+	handleMention,
+	handleDonation,
+	handleStatus,
+};
