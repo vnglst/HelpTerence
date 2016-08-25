@@ -34,11 +34,10 @@ const listen = asyncFn(() => {
 	try {
 		const botInfo = awaitFn(BotController.createOrFindBot(botData));
 		if (botInfo) console.log(`[App] Bot found with ${botInfo.money} money bags`);
+		terence.start();
 	} catch (e) {
 		console.log(`[Express] Database error ${e}`);
 	}
-
-	terence.start();
 });
 
 function connectToDB() {
