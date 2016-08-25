@@ -77,6 +77,7 @@ Bot.prototype.reply = function reply(userHandle, message, callback) {
 
 // start listening for mentions
 Bot.prototype.listen = function listen(handler) {
+	console.log('[Bot] Connecting to stream...');
 	const stream = this.twit.stream('statuses/filter', {
 		track: ['@HelpTerence'],
 	});
@@ -150,23 +151,3 @@ Bot.prototype.prune = function prune(callback) {
 			return callback();
 		});
 };
-// //
-// // favorite a tweet
-// //
-// Bot.prototype.favorite = function favorite(params, callback) {
-// 	const self = this;
-//
-// 	self.twit.get('search/tweets', params, (err, reply) => {
-// 		if (err) return callback(err);
-//
-// 		const tweets = reply.statuses;
-// 		const randomTweet = randIndex(tweets);
-// 		if (typeof randomTweet !== 'undefined') {
-// 			return self.twit.post('favorites/create', {
-// 				id: randomTweet.id_str,
-// 			}, callback);
-// 		}
-// 		return callback();
-// 	});
-// };
-//
