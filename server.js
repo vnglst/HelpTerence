@@ -30,6 +30,7 @@ const listen = asyncFn(() => {
 	if (app.get('env') === 'test') return;
 	app.listen(port);
 	console.log(`[Express] App started on port ${port}`);
+	console.log(`[App] Starting in ${process.env.NODE_ENV} mode`);
 	try {
 		awaitFn(BotController.createOrFindBot(botData));
 	} catch (e) {
