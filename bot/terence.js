@@ -11,6 +11,8 @@ const config = {
 	timeout_ms: 60 * 1000,
 };
 
+console.log(`[Bot] Creating bot using following config: ${config}`);
+
 const bot = new Bot(config);
 
 // Private functions
