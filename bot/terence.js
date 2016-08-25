@@ -67,6 +67,7 @@ const handleDonation = asyncFn((tweet) => {
 			return awaitFn(bot.reply(donator, message));
 		}
 		// Retrow all other catched errors
+		console.log(`[Terence] Twitter error ${e}`);
 		throw e;
 	}
 });
@@ -111,7 +112,7 @@ exports.start = () => {
 				}
 			});
 		}
-	}, 120000); // every 120 seconds
+	}, 600000); // every 10 minutes = 600 seconden
 };
 
 exports.bot = bot;
