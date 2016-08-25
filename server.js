@@ -19,7 +19,6 @@ const terence = require('./bot/terence');
 const config = require('./config');
 const BotController = require('./api/controllers/BotController');
 
-
 const port = process.env.PORT || 3000;
 const app = express();
 const botData = {
@@ -33,7 +32,11 @@ const listen = asyncFn(() => {
 	if (app.get('env') === 'test') return;
 	app.listen(port);
 	console.log(`[Express] App started on port ${port}`);
-	awaitFn(BotController.createOrFindBot(botData));
+	try {
+		awaitFn(BotController.createOrFindBot(botData));
+	} catch (e) {
+		console.log(`[Express] Database error ${e}`);
+	}
 	terence.start();
 });
 
