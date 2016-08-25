@@ -7,9 +7,7 @@
  */
 
 require('dotenv')
-	.config({
-		silent: true, // suppress warning when .env is missing in production
-	});
+	.config();
 const express = require('express');
 const mongoose = require('mongoose');
 const asyncFn = require('asyncawait/async');
