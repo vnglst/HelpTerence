@@ -18,6 +18,54 @@ test('Creating bot', t => {
 	t.end();
 });
 
+test('prune your followers list; unfollow a friend that has not followed you back',
+	t => {
+		bot.prune()
+			.then((result) => {
+				const target = result.data.id_str;
+				t.ok(target, 'should unfollow user');
+				t.comment(`Unfollowing @${result.data.screen_name}`);
+				return bot.twit.post('friendships/create', {
+					id: target,
+				});
+			})
+		.then((result) => {
+			const target = result.data.id_str;
+			t.ok(target, 'should follow user');
+			t.comment(`Following @${result.data.screen_name}`);
+			t.end();
+		})
+		.catch((err) => {
+			t.notOk(err, 'there should not be an error');
+			t.comment(err);
+			t.end();
+		});
+	});
+
+
+test('Choose a random friend of one of your friends, and follow that user, unfollow after that',
+	t => {
+		bot.mingle()
+			.then((result) => {
+				const target = result.data.id_str;
+				t.ok(target, 'should follow user');
+				t.comment(`Following @${result.data.screen_name}`);
+				return bot.twit.post('friendships/destroy', {
+					id: target,
+				});
+			})
+			.then((result) => {
+				t.ok(result.data, 'should unfollow user');
+				t.comment(`Unfollowing @${result.data.screen_name}`);
+				t.end();
+			})
+			.catch((err) => {
+				t.notOk(err, 'there should not be an error');
+				t.comment(err);
+				t.end();
+			});
+	});
+
 test('Creating and deleting a tweet', t => {
 	let tweetId = null;
 	const status = 'Hello world, this is a test tweet';

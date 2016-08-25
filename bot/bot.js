@@ -1,7 +1,5 @@
-//
 //  Bot
 //  class for performing various twitter actions
-//
 const Twit = require('twit');
 
 const Bot = module.exports = function defineBot(config) {
@@ -13,9 +11,7 @@ function randIndex(arr) {
 	return arr[index];
 }
 
-//
 //  post a tweet
-//
 Bot.prototype.tweet = function tweet(status, callback) {
 	if (typeof status !== 'string') {
 		return callback(new Error('tweet must be of type String'));
@@ -27,9 +23,7 @@ Bot.prototype.tweet = function tweet(status, callback) {
 	}, callback);
 };
 
-//
 //  delete a tweet
-//
 Bot.prototype.destroy = function destroy(id, callback) {
 	return this.twit.post('statuses/destroy/:id', {
 		id,
@@ -54,9 +48,7 @@ Bot.prototype.searchFollow = function searchFollow(params, callback) {
 		});
 };
 
-//
 // retweet
-//
 Bot.prototype.retweet = function retweet(params, callback) {
 	const self = this;
 
@@ -74,9 +66,7 @@ Bot.prototype.retweet = function retweet(params, callback) {
 	});
 };
 
-//
 // reply
-//
 Bot.prototype.reply = function reply(userHandle, message, callback) {
 	const params = {
 		status: `@${userHandle} ${message}`,
@@ -85,9 +75,7 @@ Bot.prototype.reply = function reply(userHandle, message, callback) {
 	return this.twit.post('statuses/update', params, callback);
 };
 
-//
 // start listening for mentions
-//
 Bot.prototype.listen = function listen(handler) {
 	const stream = this.twit.stream('statuses/filter', {
 		track: ['@HelpTerence'],
@@ -115,6 +103,53 @@ Bot.prototype.listen = function listen(handler) {
 	});
 };
 
+//  choose a random friend of one of your friends, and follow that user
+Bot.prototype.mingle = function mingle(callback) {
+	const self = this;
+
+	return this.twit.get('friends/ids')
+		.then((result) => {
+			const followers = result.data.ids;
+			const randFollower = randIndex(followers);
+
+			return self.twit.get('friends/ids', {
+				user_id: randFollower,
+			});
+		})
+		.then((result) => {
+			const friends = result.data.ids;
+			const target = randIndex(friends);
+
+			return self.twit.post('friendships/create', {
+				id: target,
+			}, callback);
+		});
+};
+
+//  prune your followers list; unfollow a friend that hasn't followed you back
+Bot.prototype.prune = function prune(callback) {
+	const self = this;
+	let followers;
+	return this.twit.get('followers/ids')
+		.then((result) => {
+			followers = result.data.ids;
+			return self.twit.get('friends/ids');
+		})
+		.then((result) => {
+			const friends = result.data.ids;
+			let pruned = false;
+			while (!pruned) {
+				const target = randIndex(friends);
+				if (!~followers.indexOf(target)) {
+					pruned = true;
+					return self.twit.post('friendships/destroy', {
+						id: target,
+					}, callback);
+				}
+			}
+			return callback();
+		});
+};
 // //
 // // favorite a tweet
 // //
@@ -135,64 +170,3 @@ Bot.prototype.listen = function listen(handler) {
 // 	});
 // };
 //
-// //
-// //  choose a random friend of one of your followers, and follow that user
-// //
-// Bot.prototype.mingle = function mingle(callback) {
-// 	const self = this;
-//
-// 	this.twit.get('followers/ids', (err, reply) => {
-// 		if (err) {
-// 			return callback(err);
-// 		}
-//
-// 		const followers = reply.ids;
-// 		const randFollower = randIndex(followers);
-//
-// 		self.twit.get('friends/ids', {
-// 			user_id: randFollower,
-// 		}, (err, reply) => {
-// 			if (err) {
-// 				return callback(err);
-// 			}
-//
-// 			const friends = reply.ids;
-// 			const target = randIndex(friends);
-//
-// 			self.twit.post('friendships/create', {
-// 				id: target,
-// 			}, callback);
-// 		});
-// 	});
-// };
-//
-// //
-// //  prune your followers list; unfollow a friend that hasn't followed you back
-// //
-// Bot.prototype.prune = function prune(callback) {
-// 	const self = this;
-//
-// 	this.twit.get('followers/ids', (err, reply) => {
-// 		if (err) return callback(err);
-//
-// 		const followers = reply.ids;
-//
-// 		self.twit.get('friends/ids', (err, reply) => {
-// 			if (err) return callback(err);
-//
-// 			const friends = reply.ids;
-// 			let pruned = false;
-//
-// 			while (!pruned) {
-// 				const target = randIndex(friends);
-//
-// 				if (!~followers.indexOf(target)) {
-// 					pruned = true;
-// 					self.twit.post('friendships/destroy', {
-// 						id: target,
-// 					}, callback);
-// 				}
-// 			}
-// 		});
-// 	});
-// };
