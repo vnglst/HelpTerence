@@ -32,10 +32,12 @@ const listen = asyncFn(() => {
 	console.log(`[Express] App started on port ${port}`);
 	console.log(`[App] Starting in ${process.env.NODE_ENV} mode`);
 	try {
-		awaitFn(BotController.createOrFindBot(botData));
+		const botInfo = awaitFn(BotController.createOrFindBot(botData));
+		if (botInfo) console.log(`[App] Bot found with ${botInfo.money} money bags`);
 	} catch (e) {
 		console.log(`[Express] Database error ${e}`);
 	}
+
 	terence.start();
 });
 
