@@ -18,7 +18,7 @@
             user: "pi",
             host: "raspberrypi.local",
             ref: "origin/master",
-            repo: "git@github.com:vnglst/HelpTerence.git",
+            repo: "https://github.com/vnglst/HelpTerence.git",
             path: "/var/www/HelpTerence",
             "post-deploy": "npm install && pm2 startOrRestart ecosystem.json --env production"
         }
