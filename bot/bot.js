@@ -77,7 +77,7 @@ Bot.prototype.retweet = function retweet(params, callback) {
 //
 // reply
 //
-Bot.prototype.reply = function reploy(userHandle, message, callback) {
+Bot.prototype.reply = function reply(userHandle, message, callback) {
 	const params = {
 		status: `@${userHandle} ${message}`,
 	};
