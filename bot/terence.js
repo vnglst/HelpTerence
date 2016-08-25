@@ -11,7 +11,7 @@ const config = {
 	timeout_ms: 60 * 1000,
 };
 
-console.log(`[Bot] Creating bot using following config: ${config}`);
+console.log(`[Bot] Creating bot using following config: ${JSON.stringify(config, null, 4)}`);
 
 const bot = new Bot(config);
 
