@@ -3,19 +3,30 @@
         name: "HelpTerence",
         script: "server.js",
         env: {
-            COMMON_VARIABLE: "false"
+            COMMON_VARIABLE: "true"
         },
         env_production: {
             NODE_ENV: "production",
         }
     }],
     deploy: {
-        production: {
+        production-pi: {
             user: "pi",
             host: "raspberrypi.local",
             ref: "origin/master",
             repo: "https://github.com/vnglst/HelpTerence.git",
             path: "/var/www/HelpTerence",
+            "post-deploy": "npm install && pm2 startOrRestart ecosystem.json --env production",
+            "env": {
+                "NODE_ENV": "production"
+            }
+        },
+        production-cloud: {
+            user: "root",
+            host: "term-search.nl",
+            ref: "origin/master",
+            repo: "https://github.com/vnglst/HelpTerence.git",
+            path: "/opt/HelpTerence",
             "post-deploy": "npm install && pm2 startOrRestart ecosystem.json --env production",
             "env": {
                 "NODE_ENV": "production"
