@@ -11,6 +11,8 @@ const botData = {
 	money: 0,
 };
 
+const coinTypes = ['💰', '💵', '💶', '💷', '💴', '💸', '💳'];
+
 const {
 	cleanup,
 } = require('./helper');
@@ -38,15 +40,18 @@ test('Let @vnglst donate Terence some money', asyncFn(t => {
 	const dbBot = awaitFn(BotController.createOrFindBot(botData));
 	t.ok(dbBot, 'A bot should be created in the database');
 	const tweet = {
-		text: '💰',
+		text: 'here some 💰💰💰💵💶💷💴💸💳',
 		user: {
 			screen_name: 'vnglst',
 		},
 	};
-	const result = awaitFn(terence.__tests.handleDonation(tweet));
+	const result = awaitFn(terence.__tests.handleDonation(tweet, coinTypes));
 	t.ok(result, 'A thank you tweet should be created');
 	const tweetId = result.data.id_str;
 	t.ok(tweetId, 'A tweet id should be found');
+	const tweetText = result.data.text;
+	t.ok(tweetText.includes('9 monies'),
+		'Tweet text should include 9 monies');
 	terence.bot.destroy(tweetId)
 		.then(delResult => {
 			t.ok(delResult, 'Thank you tweet should be deleted');
@@ -58,17 +63,16 @@ test('Let @vnglst donate Terence some money again', asyncFn(t => {
 	const dbBot = awaitFn(BotController.createOrFindBot(botData));
 	t.ok(dbBot, 'A bot should be created in the database');
 	const tweet = {
-		text: '💰',
+		text: '💵',
 		user: {
 			screen_name: 'vnglst',
 		},
 	};
-	const result = awaitFn(terence.__tests.handleDonation(tweet));
+	const result = awaitFn(terence.__tests.handleDonation(tweet, coinTypes));
 
 	const tweetId = result.data.id_str;
 	const tweetText = result.data.text;
-	t.ok(tweetText,
-		'@vnglst sorry, you already donated today. I dont want you to get poor!',
+	t.ok(tweetText.includes('already donated'),
 		'Should be a already donated tweet');
 	terence.bot.destroy(tweetId)
 		.then(delResult => {

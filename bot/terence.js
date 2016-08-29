@@ -27,13 +27,34 @@ function format(seconds) {
 	return `${pad(hours)}:${pad(minutes)}:${pad(secs)}`;
 }
 
+function includesOne(str, arr) {
+	let includes = false;
+	arr.forEach(char => {
+		if (str.includes(char)) includes = true;
+	});
+	return includes;
+}
+
+function getCount(text, coinTypes) {
+	let count = 0;
+
+	function countChar(str, char) {
+		return str.split(char)
+			.length - 1;
+	}
+	coinTypes.forEach((coinType) => {
+		count += countChar(text, coinType);
+	});
+	return count;
+}
+
 function getStatusMessage() {
 	const uptime = format(process.uptime());
 	return `still going strong, thanks for asking! Uptime: ${uptime}`;
 }
 
 function getDonationMessage(count, total) {
-	const message = `thanks for donating ${count} money bags! I now have ${total} money bags! 👍`;
+	const message = `thanks for donating ${count} monies! I now have ${total} money bags! 👍`;
 	return message;
 }
 
@@ -48,10 +69,9 @@ const handleStatus = asyncFn((tweet) => {
 	return awaitFn(bot.reply(replyTo, message));
 });
 
-const handleDonation = asyncFn((tweet) => {
+const handleDonation = asyncFn((tweet, coinTypes) => {
 	const text = tweet.text;
-	const count = text.split('💰')
-		.length - 1;
+	const count = getCount(text, coinTypes);
 	const donator = tweet.user.screen_name;
 	const donationData = {
 		fromTwitterID: donator,
@@ -65,7 +85,7 @@ const handleDonation = asyncFn((tweet) => {
 		return awaitFn(bot.reply(donator, message));
 	} catch (e) {
 		if (e.message === 'Donation not allowed. Already donated today!') {
-			const message = 'sorry, you already donated today. I dont want you to get poor!';
+			const message = 'sorry, you already donated today. I wouldnt want you to get poor!';
 			return awaitFn(bot.reply(donator, message));
 		}
 		// Retrow all other catched errors
@@ -75,9 +95,10 @@ const handleDonation = asyncFn((tweet) => {
 });
 
 const handleMention = (tweet) => {
+	const coinTypes = ['💰', '💵', '💶', '💷', '💴', '💸', '💳'];
 	const text = tweet.text;
 	console.log(`[Terence] Somebody mentioned me in the following tweet:\n ${text}`);
-	if (text.includes('💰')) handleDonation(tweet);
+	if (includesOne(text, coinTypes)) handleDonation(tweet, coinTypes);
 	if (text.includes('status')) handleStatus(tweet);
 };
 
@@ -122,6 +143,8 @@ exports.bot = bot;
 // For tests
 
 exports.__tests = {
+	includesOne,
+	getCount,
 	handleMention,
 	handleDonation,
 	handleStatus,
