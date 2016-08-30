@@ -48,13 +48,25 @@ function getCount(text, coinTypes) {
 	return count;
 }
 
+function randomElement(array) {
+	return array[Math.floor(Math.random() * array.length)];
+}
+
 function getStatusMessage() {
 	const uptime = format(process.uptime());
 	return `still going strong, thanks for asking! Uptime: ${uptime}`;
 }
 
 function getDonationMessage(count, total) {
-	const message = `thanks for donating ${count} monies! I now have ${total} money bags! 👍`;
+	const messages = [
+		`thanks for donating ${count} monies! I now have ${total} money bags! 👍`,
+		`thanks for your ${count} monies, buddy. I'm now at ${total} money bags!`,
+		`muchas gracias!! Including your ${count} I now have ${total} money bags! 🎉`,
+		`vielen Dank!! That's German for thank you. With your ${count} I'm now at ${total} monies! 🍺`,
+		`heel erg bedankt! That's Dutch for thank you. With your ${count} I'm now at ${total} monies! 🧀`,
+		`Wow, I'm now at ${total} monies! Thanks for those ${count} monies. 👍👍`,
+	];
+	const message = randomElement(messages);
 	return message;
 }
 
@@ -143,6 +155,7 @@ exports.bot = bot;
 // For tests
 
 exports.__tests = {
+	getDonationMessage,
 	includesOne,
 	getCount,
 	handleMention,
