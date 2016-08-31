@@ -31,7 +31,11 @@ exports.createDonation = asyncFn((donationData) => {
 
 exports.index = asyncFn((req, res) => {
 	const terence = awaitFn(Bot.findOne());
-	const donations = awaitFn(Donation.find().limit(5));
+	const donations = awaitFn(Donation.find()
+		.sort({
+			date: 'desc',
+		})
+		.limit(5));
 	const count = awaitFn(Donation.count());
 	res.render('', {
 		title: 'Donations',
