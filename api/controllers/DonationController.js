@@ -33,7 +33,7 @@ exports.index = asyncFn((req, res) => {
 	const terence = awaitFn(Bot.findOne());
 	const donations = awaitFn(Donation.find()
 		.sort({
-			date: 'desc',
+			createdAt: 'desc',
 		})
 		.limit(5));
 	const count = awaitFn(Donation.count());
