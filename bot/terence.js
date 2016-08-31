@@ -59,15 +59,18 @@ function getStatusMessage() {
 
 function getDonationMessage(count, total) {
 	const messages = [
-		`thanks for donating ${count} monies! I now have ${total} money bags! 👍`,
-		`thanks for your ${count} monies, buddy. I'm now at ${total} money bags!`,
+		`thanks for donating ${count} monies! I now have ${
+			total} money bags! 👍`,
+		`thanks for your ${count} monies, buddy. I'm now at ${
+			total} money bags!`,
 		`muchas gracias!! Including your ${
 			count} I now have ${total} money bags! 🎉`,
 		`vielen Dank!! That's German for thank you. With your ${
 			count} I'm now at ${total} monies! 🍺`,
 		`heel erg bedankt! That's Dutch for thank you. With your ${
 			count} I'm now at ${total} monies! 🧀`,
-		`Wow, I'm now at ${total} monies! Thanks for those ${count} monies. 👍👍`,
+		`Wow, I'm now at ${total} monies! Thanks for those ${
+			count} monies. 👍👍`,
 	];
 	const message = randomElement(messages);
 	return message;
