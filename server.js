@@ -17,7 +17,7 @@ const terence = require('./bot/terence');
 const config = require('./config');
 const BotController = require('./api/controllers/BotController');
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 1970;
 const app = express();
 const botData = {
 	twitterID: 'HelpTerence',
@@ -26,10 +26,14 @@ const botData = {
 mongoose.Promise = global.Promise;
 module.exports = app;
 
+require('./config/express')(app);
+require('./config/routes')(app);
+
 const listen = asyncFn(() => {
 	if (app.get('env') === 'test') return;
 	app.listen(port);
 	console.log(`[Express] App started on port ${port}`);
+	console.log(`[Express] Visit http://localhost:${port}`);
 	console.log(`[App] Starting in ${process.env.NODE_ENV} mode`);
 	try {
 		const botInfo = awaitFn(BotController.createOrFindBot(botData));

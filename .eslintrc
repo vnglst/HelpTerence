@@ -10,7 +10,8 @@
     "no-underscore-dangle": ["error", { "allow": ["_extend", "__tests"] }],
     "indent": ["error", "tab"],
     "no-unused-vars": ["error", { "varsIgnorePattern": "app" }],
-    "no-console": 0
+    "no-console": 0,
+     no-param-reassign: ["error", { "props": false }]
   },
   "globals": {
   }

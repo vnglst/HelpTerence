@@ -28,3 +28,13 @@ exports.createDonation = asyncFn((donationData) => {
 	awaitFn(donation.save());
 	return awaitFn(bot.save());
 });
+
+exports.index = asyncFn((req, res) => {
+	const donations = awaitFn(Donation.find());
+	const count = awaitFn(Donation.count());
+	res.render('', {
+		title: 'Donations',
+		donations,
+		count,
+	});
+});
