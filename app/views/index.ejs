@@ -26,17 +26,25 @@
 		</div>
 
 		<div class="jumbotron">
-	    <h1>Help Terence</h1>
+			<h1>Help Terence</h1>
 			<p class="lead">Hi my name is Terence and I'm a Twitter bot. I'm raising a million for a trip around the world. Will you help me?</p>
 			<p><a class="btn btn-lg btn-success" href="https://twitter.com/helpterence" role="button">Donate 💰's now</a></p>
 		</div>
 
+		<div class="jumbotron">
+			<p><%= terence.money %> of 1000000 💰's</p>
+			<div class="progress">
+				<div class="progress-bar" role="progressbar" aria-valuenow="<%= terence.money / 10000 %>" aria-valuemin="3" aria-valuemax="100" style="width: <%= Math.max(terence.money / 10000, 2) %>%;">
+				</div>
+			</div>
+		</div>
+
+
 		<div class="row marketing">
 			<div class="col-lg-6">
 				<h4>Helping Terence</h4>
-					<p>You can help me by donating 💰💰💰 using @HelpTerence.
-						All donations are welcome, but you can only donate once per day!
-					</p>
+				<p>You can help me by donating 💰💰💰 using @HelpTerence. All donations are welcome, but you can only donate once per day!
+				</p>
 			</div>
 
 			<div class="col-lg-6">
