@@ -30,7 +30,7 @@ exports.createDonation = asyncFn((donationData) => {
 });
 
 exports.index = asyncFn((req, res) => {
-	const donations = awaitFn(Donation.find());
+	const donations = awaitFn(Donation.find().limit(5));
 	const count = awaitFn(Donation.count());
 	res.render('', {
 		title: 'Donations',
