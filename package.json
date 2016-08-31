@@ -19,16 +19,18 @@
     "eslint": "^3.2.2",
     "eslint-config-airbnb": "^10.0.0",
     "eslint-plugin-import": "^1.12.0",
+    "eslint-plugin-jsx-a11y": "^2.2.0",
+    "eslint-plugin-react": "^6.2.0",
     "faucet": "0.0.1",
     "nodemon": "^1.10.0",
     "pm2": "^1.1.3"
   },
   "scripts": {
     "test": "export NODE_ENV=test; tape test/*-test.js | tap-spec",
-		"lint": "npm run lint:js",
+    "lint": "npm run lint:js",
     "lint:eslint": "eslint --ignore-path .gitignore --ignore-pattern internals/scripts",
     "lint:js": "npm run lint:eslint -- . ",
-		"deploy": "npm run lint; pm2 deploy ecosystem.json production",
+    "deploy": "npm run lint; pm2 deploy ecosystem.json production",
     "start": "export NODE_ENV=development; nodemon server.js",
     "debug": "export NODE_ENV=development; nodemon --debug server.js"
   },
