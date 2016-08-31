@@ -66,9 +66,27 @@ test('Creating a donation with a different date',
 		awaitFn(DonationController
 			.createDonation(donationData));
 		const bot = awaitFn(Bot.findOne());
-		t.equal(bot.money, 20, 'Bot should  have 10 monies');
+		t.equal(bot.money, 20, 'Bot should have 20 monies');
 		const donations = awaitFn(Donation.find());
-		t.equal(donations.length, 2, 'There should be 2 valid donation in the db');
+		t.equal(donations.length, 2, 'There should be 2 valid donations in the db');
+		t.end();
+	}));
+
+test('Getting the top donaters',
+	asyncFn(t => {
+		donationData.createdAt = new Date();
+		donationData.fromTwitterID = 'fghij';
+		awaitFn(DonationController
+			.createDonation(donationData));
+		const bot = awaitFn(Bot.findOne());
+		t.equal(bot.money, 30, 'Bot should have 30 monies');
+		const donations = awaitFn(Donation.find());
+		t.equal(donations.length, 2, 'There should be 3 valid donations in the db');
+		const topDonaters = awaitFn(Donation.getTopDonaters());
+		t.equal(typeof topDonaters, Array, 'topDonaters should be an array');
+		t.equal(topDonaters.length, 2, 'topDonaters should have a lenght of 2');
+		t.equal(topDonaters[0].fromTwitterID, 'abcde', 'topDonater number one should be abcde');
+		t.equal(topDonaters[0].money, 20, 'topDonater number one should have donated a total of 20');
 		t.end();
 	}));
 
