@@ -52,7 +52,7 @@
 					<% donations.forEach(function(donation){ %>
 						<li>
 							<a href="http://twitter.com/<%= donation.fromTwitterID %>">
-							 @<%= donation.fromTwitterID %>"
+							 @<%= donation.fromTwitterID %>
 						 </a> donated
 							<%= donation.money %> 💰 on
 								<%= new Date(donation.createdAt).toDateString() %>
