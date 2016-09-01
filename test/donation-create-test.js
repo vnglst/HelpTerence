@@ -78,15 +78,20 @@ test('Getting the top donaters',
 		donationData.fromTwitterID = 'fghij';
 		awaitFn(DonationController
 			.createDonation(donationData));
+		donationData.money = 50;
+		donationData.createdAt = new Date();
+		donationData.fromTwitterID = 'klmno';
+		awaitFn(DonationController
+			.createDonation(donationData));
 		const bot = awaitFn(Bot.findOne());
-		t.equal(bot.money, 30, 'Bot should have 30 monies');
+		t.equal(bot.money, 80, 'Bot should have 30 monies');
 		const donations = awaitFn(Donation.find());
-		t.equal(donations.length, 2, 'There should be 3 valid donations in the db');
+		t.equal(donations.length, 4, 'There should be 3 valid donations in the db');
 		const topDonaters = awaitFn(Donation.getTopDonaters());
-		t.equal(typeof topDonaters, Array, 'topDonaters should be an array');
-		t.equal(topDonaters.length, 2, 'topDonaters should have a lenght of 2');
-		t.equal(topDonaters[0].fromTwitterID, 'abcde', 'topDonater number one should be abcde');
-		t.equal(topDonaters[0].money, 20, 'topDonater number one should have donated a total of 20');
+		t.equal(topDonaters.length, 3, 'topDonaters should have a length of 3');
+		t.equal(topDonaters[1]._id, 'abcde', 'topDonater number 2 should be abcde');
+		t.equal(topDonaters[1].value, 20, 'value of topDonater number 2 should total of 20');
+		t.equal(topDonaters[0].value, 50, 'value of topDonater number 1 should total of 50');
 		t.end();
 	}));
 

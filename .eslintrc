@@ -7,7 +7,7 @@
   },
   "parser": "babel-eslint",
   "rules": {
-    "no-underscore-dangle": ["error", { "allow": ["_extend", "__tests"] }],
+    "no-underscore-dangle": ["error", { "allow": ["_extend", "__tests", "_id"] }],
     "indent": ["error", "tab"],
     "no-unused-vars": ["error", { "varsIgnorePattern": "app" }],
     "no-console": 0,

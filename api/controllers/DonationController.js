@@ -37,8 +37,10 @@ exports.index = asyncFn((req, res) => {
 		})
 		.limit(5));
 	const count = awaitFn(Donation.count());
+	const topDonaters = awaitFn(Donation.getTopDonaters());
 	res.render('', {
 		title: 'Donations',
+		topDonaters,
 		donations,
 		count,
 		terence,
