@@ -35,7 +35,7 @@ exports.index = asyncFn((req, res) => {
 		.sort({
 			createdAt: 'desc',
 		})
-		.limit(5));
+		.limit(10));
 	const count = awaitFn(Donation.count());
 	const topDonaters = awaitFn(Donation.getTopDonaters());
 	res.render('', {
