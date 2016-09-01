@@ -44,6 +44,17 @@
 			</div>
 		</div>
 
+		<div class="jumbotron">
+			<h1><%= totalDonaters %></h1>
+			<h2>backers</h2>
+			<h1><%= terence.money %> 💰</h1>
+			<h2>pledged of 1,000,000 💰 goal</p>
+			<div class="progress">
+				<div class="progress-bar" role="progressbar" aria-valuenow="<%= terence.money / 10000 %>" aria-valuemin="3" aria-valuemax="100" style="width: <%= Math.max(terence.money / 10000, 2) %>%;">
+				</div>
+			</div>
+		</div>
+
 		<div class="row marketing">
 			<div class="col-lg-6">
 				<h4>Recent donations</h4>
@@ -72,14 +83,6 @@
 						</li>
 						<% }); %>
 				</ul>
-			</div>
-		</div>
-
-		<div class="jumbotron">
-			<p><%= terence.money %> of 1000000 💰's</p>
-			<div class="progress">
-				<div class="progress-bar" role="progressbar" aria-valuenow="<%= terence.money / 10000 %>" aria-valuemin="3" aria-valuemax="100" style="width: <%= Math.max(terence.money / 10000, 2) %>%;">
-				</div>
 			</div>
 		</div>
 

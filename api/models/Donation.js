@@ -39,8 +39,7 @@ DonationSchema.statics.getTopDonaters = () => {
 		},
 	};
 	return Donation.mapReduce(mapReduce)
-		.then(results => results.sort((a, b) => a.value < b.value))
-		.then(results => results.slice(0, 9));
+		.then(results => results.sort((a, b) => a.value < b.value));
 };
 
 Donation = mongoose.model('Donation', DonationSchema);
