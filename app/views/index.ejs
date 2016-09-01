@@ -22,7 +22,8 @@
 					<li role="presentation"><a href="#">Contact</a></li> -->
 				</ul>
 			</nav>
-			<h3 class="text-muted">@HelpTerence</h3>
+			<!-- <h3 class="text-muted">@HelpTerence</h3> -->
+			<img src="terence-icon.png" height="50px" width="50px"></img>
 		</div>
 
 		<div class="jumbotron">
@@ -34,7 +35,7 @@
 		<div class="row marketing">
 			<div class="col-lg-6">
 				<h4>Helping Terence</h4>
-				<p>You can help me by donating money emoji on Twitter by tweeting "@HelpTerence here some 💰💰💰💵💵💵!". All donations are welcome, but you can only donate once per day!
+				<p>You can help me by donating money emoji on Twitter by tweeting (for example) "@HelpTerence here some 💰💰💰". All donations are welcome, but you can only donate once per day!
 				</p>
 			</div>
 
@@ -42,6 +43,20 @@
 				<h4>Accepted currencies</h4>
 				<p>I also accept foreign currencies like 💵, 💴, 💷, 💶, 💸 and even 💳. They're all automagically converted to 💰.</p>
 			</div>
+		</div>
+
+		<div class="col-lg-6">
+			<h4>Top donators</h4>
+			<ul class="list-unstyled">
+				<% topDonaters.forEach(function(donater){ %>
+					<li>
+						<a href="http://twitter.com/<%= donater._id %>">
+						 @<%= donater._id %>
+					 </a> donated
+						<%= donater.value %> 💰
+					</li>
+					<% }); %>
+			</ul>
 		</div>
 
 		<div class="row marketing">
@@ -60,26 +75,13 @@
 				</ul>
 			</div>
 
-			<div class="col-lg-6">
-				<h4>Top donators</h4>
-				<ul class="list-unstyled">
-					<% topDonaters.forEach(function(donater){ %>
-						<li>
-							<a href="http://twitter.com/<%= donater._id %>">
-							 @<%= donater._id %>
-						 </a> donated
-							<%= donater.value %> 💰
-						</li>
-						<% }); %>
-				</ul>
-			</div>
 		</div>
 
 		<div class="jumbotron">
 			<h1><%= totalDonaters %></h1>
-			<h3>backers</h3>
+			<h3 class="text-muted">backers</h3>
 			<h1><%= terence.money %> 💰</h1>
-			<h3>pledged of 1,000,000 💰 goal</h3>
+			<h3 class="text-muted">pledged of 1,000,000 💰 goal</h3>
 			<div class="progress">
 				<div class="progress-bar" role="progressbar" aria-valuenow="<%= terence.money / 10000 %>" aria-valuemin="3" aria-valuemax="100" style="width: <%= Math.max(terence.money / 10000, 2) %>%;">
 					<!-- <span><<%= (terence.money / 10000).toFixed(0) %>%</span> -->
