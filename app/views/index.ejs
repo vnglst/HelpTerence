@@ -47,7 +47,7 @@
 
 		<div class="col-lg-6">
 			<h4>Top donators</h4>
-			<ul class="list-unstyled">
+			<ol>
 				<% topDonaters.forEach(function(donater){ %>
 					<li>
 						<a href="http://twitter.com/<%= donater._id %>">
@@ -56,7 +56,7 @@
 						<%= donater.value %> 💰
 					</li>
 					<% }); %>
-			</ul>
+			</ol>
 		</div>
 
 		<div class="row marketing">
