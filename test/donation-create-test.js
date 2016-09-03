@@ -88,7 +88,6 @@ test('Getting the top donaters',
 		const donations = awaitFn(Donation.find());
 		t.equal(donations.length, 4, 'There should be 3 valid donations in the db');
 		const topDonaters = awaitFn(Donation.getTopDonaters());
-		console.log(topDonaters);
 		t.equal(topDonaters.length, 3, 'topDonaters should have a length of 3');
 		t.equal(topDonaters[1]._id, 'abcde', 'topDonater number 2 should be abcde');
 		t.equal(topDonaters[1].value, 20, 'value of topDonater number 2 should total of 20');
