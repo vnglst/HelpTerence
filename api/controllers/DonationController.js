@@ -39,7 +39,7 @@ exports.index = asyncFn((req, res) => {
 	const count = awaitFn(Donation.count());
 	const top = awaitFn(Donation.getTopDonaters());
 	const totalDonaters = top.length;
-	const topDonaters = top.sort((a, b) => a.value < b.value).slice(0, 9);
+	const topDonaters = top.sort((a, b) => b.value - a.value).slice(0, 9);
 	res.render('', {
 		title: 'Donations',
 		totalDonaters,
