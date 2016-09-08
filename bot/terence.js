@@ -124,7 +124,7 @@ exports.start = () => {
 		});
 
 		const rand = Math.random();
-		if (rand <= 0.60) { //  make a friend
+		if (rand <= 0.55) { //  make a friend
 			bot.mingle((err, reply) => {
 				if (err) {
 					handleError(err);
@@ -143,7 +143,7 @@ exports.start = () => {
 				}
 			});
 		}
-	}, 300000); // every 5 minutes = 300 seconden
+	}, 30 * 60000); // every 30 * 1 minute = 60 seconden = 30 * 60 000 ms
 };
 
 exports.bot = bot;
