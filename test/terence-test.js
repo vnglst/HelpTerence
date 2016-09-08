@@ -19,7 +19,7 @@ const {
 
 test('Clean up', cleanup);
 
-test('Let @vnglst ask Terence for a status report', asyncFn(t => {
+test('Ask Terence for a status report', asyncFn(t => {
 	const tweet = {
 		user: {
 			screen_name: 'vnglst',
@@ -36,7 +36,7 @@ test('Let @vnglst ask Terence for a status report', asyncFn(t => {
 		});
 }));
 
-test('Let @vnglst donate Terence some money', asyncFn(t => {
+test('Donate Terence some money', asyncFn(t => {
 	const dbBot = awaitFn(BotController.createOrFindBot(botData));
 	t.ok(dbBot, 'A bot should be created in the database');
 	const tweet = {
