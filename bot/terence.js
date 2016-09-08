@@ -2,18 +2,11 @@ const DonationController = require('../api/controllers/DonationController');
 const Bot = require('./bot');
 const asyncFn = require('asyncawait/async');
 const awaitFn = require('asyncawait/await');
-
-const config = {
-	consumer_key: process.env.TWITTER_CONSUMER_KEY,
-	consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
-	access_token: process.env.TWITTER_ACCESS_TOKEN,
-	access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET,
-	timeout_ms: 60 * 1000,
-};
+const config = require('../config');
 
 console.log(`[Bot] Creating bot using following config: ${JSON.stringify(config, null, 4)}`);
 
-const bot = new Bot(config);
+const bot = new Bot(config.twitter);
 
 // Private functions
 
