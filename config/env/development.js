@@ -1,5 +1,6 @@
 module.exports = {
 	db: 'mongodb://localhost/help_terence_development',
+	botName: 'rpi147',
 	twitter: {
 		consumer_key: process.env.TWITTER_CONSUMER_KEY_DEV,
 		consumer_secret: process.env.TWITTER_CONSUMER_SECRET_DEV,

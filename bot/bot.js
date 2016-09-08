@@ -1,9 +1,12 @@
 //  Bot
 //  class for performing various twitter actions
 const Twit = require('twit');
+const config = require('../config');
 
-const Bot = module.exports = function defineBot(config) {
-	this.twit = new Twit(config);
+console.log(`[Bot] Creating bot using following config: ${JSON.stringify(config, null, 4)}`);
+
+const Bot = module.exports = function defineBot() {
+	this.twit = new Twit(config.twitter);
 };
 
 function randIndex(arr) {
@@ -79,11 +82,11 @@ Bot.prototype.reply = function reply(userHandle, message, callback) {
 Bot.prototype.listen = function listen(handler) {
 	console.log('[Bot] Connecting to stream...');
 	const stream = this.twit.stream('statuses/filter', {
-		track: ['@HelpTerence'],
+		track: [`@${config.botName}`],
 	});
 
 	stream.on('connected', () => {
-		console.log('[Bot] Connected to stream. Listening...');
+		console.log(`[Bot] Connected to stream. Listening for @${config.botName}`);
 	});
 
 	stream.on('tweet', handler);

@@ -2,11 +2,8 @@ const DonationController = require('../api/controllers/DonationController');
 const Bot = require('./bot');
 const asyncFn = require('asyncawait/async');
 const awaitFn = require('asyncawait/await');
-const config = require('../config');
 
-console.log(`[Bot] Creating bot using following config: ${JSON.stringify(config, null, 4)}`);
-
-const bot = new Bot(config.twitter);
+const bot = new Bot();
 
 // Private functions
 
