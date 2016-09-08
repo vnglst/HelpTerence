@@ -50,8 +50,9 @@ test('Donate Terence some money', asyncFn(t => {
 	const tweetId = result.data.id_str;
 	t.ok(tweetId, 'A tweet id should be found');
 	const tweetText = result.data.text;
-	t.ok(tweetText.includes('9 monies'),
-		'Tweet text should include 9 monies');
+	t.comment(tweetText);
+	t.ok(tweetText.includes('9'),
+		'Tweet text should include number 9');
 	terence.bot.destroy(tweetId)
 		.then(delResult => {
 			t.ok(delResult, 'Thank you tweet should be deleted');
