@@ -109,22 +109,22 @@ Bot.prototype.listen = function listen(handler) {
 	});
 };
 
-//  choose a random friend of one of your friends, and follow that user
+//  choose a random follower of one of @vnglst's friends, and follow that user
 Bot.prototype.mingle = function mingle(callback) {
 	const self = this;
 
-	return this.twit.get('friends/ids')
+	return this.twit.get('friends/ids', { screen_name: 'vnglst' })
 		.then((result) => {
-			const followers = result.data.ids;
-			const randFollower = randIndex(followers);
+			const friends = result.data.ids;
+			const randFriend = randIndex(friends);
 
-			return self.twit.get('friends/ids', {
-				user_id: randFollower,
+			return self.twit.get('followers/ids', {
+				user_id: randFriend,
 			});
 		})
 		.then((result) => {
-			const friends = result.data.ids;
-			const target = randIndex(friends);
+			const followers = result.data.ids;
+			const target = randIndex(followers);
 
 			return self.twit.post('friendships/create', {
 				id: target,
