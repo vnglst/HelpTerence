@@ -144,7 +144,7 @@ exports.start = () => {
 				}
 			});
 		}
-	}, 1 * 60000); // every 30 * 1 minute = 60 seconden = 30 * 60 000 ms
+	}, 30 * 60000); // every 30 * 1 minute = 60 seconden = 30 * 60 000 ms
 };
 
 exports.bot = bot;
