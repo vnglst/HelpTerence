@@ -115,9 +115,13 @@ test('Find a random tweet about bots and follow user, unfollow after that', t =>
 
 test('Reply to someone, delete tweet after that', t => {
 	let tweetId = null;
+	const tweet = {
+		user: {
+			screen_name: 'rpi147',
+		},
+	};
 	const message = 'hello there!';
-	const user = 'vnglst';
-	bot.reply(user, message)
+	bot.reply(tweet, message)
 		.then((result) => {
 			tweetId = result.data.id_str;
 			t.ok(tweetId, 'a tweet should be created');

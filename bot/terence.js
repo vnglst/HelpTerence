@@ -72,9 +72,9 @@ function handleError(err) {
 }
 
 const handleStatus = asyncFn((tweet) => {
-	const replyTo = tweet.user.screen_name;
+	const replyToTweet = tweet;
 	const message = getStatusMessage();
-	return awaitFn(bot.reply(replyTo, message));
+	return awaitFn(bot.reply(replyToTweet, message));
 });
 
 const handleDonation = asyncFn((tweet, coinTypes) => {
@@ -86,15 +86,16 @@ const handleDonation = asyncFn((tweet, coinTypes) => {
 		createdAt: new Date(),
 		money: count,
 	};
+	const replyToTweet = tweet;
 	try {
 		const donetee = awaitFn(DonationController.createDonation(donationData));
 		const total = donetee.money;
 		const message = getDonationMessage(count, total);
-		return awaitFn(bot.reply(donator, message));
+		return awaitFn(bot.reply(replyToTweet, message));
 	} catch (e) {
 		if (e.message === 'Donation not allowed. Already donated today!') {
 			const message = 'sorry, you already donated today. I wouldnt want you to get poor!';
-			return awaitFn(bot.reply(donator, message));
+			return awaitFn(bot.reply(replyToTweet, message));
 		}
 		// Retrow all other catched errors
 		console.log(`[Terence] Twitter error ${e}`);

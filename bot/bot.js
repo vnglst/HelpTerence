@@ -70,9 +70,11 @@ Bot.prototype.retweet = function retweet(params, callback) {
 };
 
 // reply
-Bot.prototype.reply = function reply(userHandle, message, callback) {
+Bot.prototype.reply = function reply(tweet, message, callback) {
+	const userHandle = tweet.user.screen_name;
 	const params = {
 		status: `@${userHandle} ${message}`,
+		in_reply_to_status_id: tweet.id_str,
 	};
 	console.log(`[Bot] Tweeting: ${params.status}`);
 	return this.twit.post('statuses/update', params, callback);
