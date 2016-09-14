@@ -1,7 +1,6 @@
 {
     apps: [{
         name: "HelpTerence",
-        Not working ?????
         script: "build/server.js",
         env: {
             COMMON_VARIABLE: "true"
