@@ -33,12 +33,12 @@
         "lint": "npm run lint:js",
         "lint:eslint": "eslint --ignore-path .gitignore --ignore-pattern internals/scripts",
         "lint:js": "npm run lint:eslint -- src/ test/ ",
-        "deploy": "npm run lint; pm2 deploy ecosystem.json production",
+        "deploy": "npm run lint && pm2 deploy ecosystem.json production",
         "start:watch": "export NODE_ENV=development; nodemon --exec babel-node src/server.js",
         "start": "export NODE_ENV=development; babel-node src/server.js",
         "debug": "export NODE_ENV=development; nodemon --debug --exec babel-node server.js",
 			  "clean": "rm -rf build && mkdir build",
-        "build": "npm run lint; npm run clean; babel src -d build",
+        "build": "npm run clean && babel src -d build",
 				"serve": "export NODE_ENV=production; node build/server.js"
     },
     "repository": {
