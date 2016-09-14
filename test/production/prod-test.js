@@ -1,7 +1,7 @@
 const test = require('tape');
 
-const app = require('../../server');
-const terence = require('../../bot/terence');
+const app = require('../../src/server');
+const terence = require('../../src/bot/terence');
 
 test('Ask Terence for a status report', async t => {
 	const result = await terence.bot.tweet('@HelpTerence status?');

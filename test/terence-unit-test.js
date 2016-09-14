@@ -1,7 +1,7 @@
 
 const test = require('tape');
-const app = require('../server');
-const terence = require('../bot/terence');
+const app = require('../src/server');
+const terence = require('../src/bot/terence');
 
 const coinTypes = ['💰', '💵', '💶', '💷', '💴', '💸', '💳'];
 

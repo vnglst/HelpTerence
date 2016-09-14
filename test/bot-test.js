@@ -1,6 +1,7 @@
 const test = require('tape');
-const Bot = require('../bot/bot');
-const app = require('../server');
+
+const Bot = require('../src/bot/bot');
+const app = require('../src/server');
 
 const config = {
 	consumer_key: process.env.TWITTER_CONSUMER_KEY_TEST,

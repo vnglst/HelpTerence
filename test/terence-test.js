@@ -1,8 +1,8 @@
 const test = require('tape');
 
-const app = require('../server');
-const terence = require('../bot/terence');
-const BotController = require('../api/controllers/BotController');
+const app = require('../src/server');
+const terence = require('../src/bot/terence');
+const BotController = require('../src/api/controllers/BotController');
 
 const botData = {
 	twitterID: '12345',

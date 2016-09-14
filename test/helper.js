@@ -1,5 +1,5 @@
-const Bot = require('../api/models/Bot');
-const Donation = require('../api/models/Donation');
+const Bot = require('../src/api/models/Bot');
+const Donation = require('../src/api/models/Donation');
 
 /**
  * Clears database

@@ -1,14 +1,14 @@
 /**
  * Tests donation creation function
  */
-
-const app = require('../server');
 const test = require('tape');
-const Bot = require('../api/models/Bot');
-const Donation = require('../api/models/Donation');
-const BotController = require('../api/controllers/BotController');
-const DonationController = require('../api/controllers/DonationController');
 const moment = require('moment');
+
+const app = require('../src/server');
+const Bot = require('../src/api/models/Bot');
+const Donation = require('../src/api/models/Donation');
+const BotController = require('../src/api/controllers/BotController');
+const DonationController = require('../src/api/controllers/DonationController');
 
 const {
 	cleanup,

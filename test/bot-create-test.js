@@ -1,10 +1,11 @@
 /**
  * Tests bot creation function
  */
-const app = require('../server');
 const test = require('tape');
-const Bot = require('../api/models/Bot');
-const BotController = require('../api/controllers/BotController');
+
+const app = require('../src/server');
+const Bot = require('../src/api/models/Bot');
+const BotController = require('../src/api/controllers/BotController');
 
 const {
 	cleanup,
