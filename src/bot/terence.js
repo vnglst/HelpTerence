@@ -1,5 +1,7 @@
 const DonationController = require('../api/controllers/DonationController');
 const Bot = require('./bot');
+const BotModel = require('../api/models/Bot');
+const Donation = require('../api/models/Donation');
 
 const bot = new Bot();
 
@@ -66,8 +68,18 @@ function handleError(err) {
 
 const handleStatus = async(tweet) => {
 	const replyToTweet = tweet;
+	const terence = await BotModel.findOne();
+	const donationCount = await Donation.count();
+	const top = await Donation.getTopDonaters();
 	const uptime = format(process.uptime());
-	const message = `still going strong, thanks for asking! Uptime: ${uptime}`;
+	const message = `still going strong!
+		Uptime: ${uptime}
+		# of donations: ${donationCount}
+		Pledged: ${terence.money} 💰
+		Top 3 donaters:
+			1. @${(top[0] && top[0]._id) || '...'}
+			2. @${(top[1] && top[1]._id) || '...'}
+			3. @${(top[2] && top[2]._id) || '...'}`;
 	return await bot.reply(replyToTweet, message);
 };
 
