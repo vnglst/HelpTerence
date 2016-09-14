@@ -6,8 +6,6 @@ const terence = require('../src/bot/terence');
 const BotController = require('../src/api/controllers/BotController');
 const DonationController = require('../src/api/controllers/DonationController');
 
-const coinTypes = ['💰', '💵', '💶', '💷', '💴', '💸', '💳'];
-
 const donationData = {
 	fromTwitterID: 'abcde',
 	createdAt: moment()
