@@ -1,7 +1,8 @@
 {
     apps: [{
         name: "HelpTerence",
-        script: "/opt/HelpTerence/current/build/server.js",
+        Not working ?????
+        script: "build/server.js",
         env: {
             COMMON_VARIABLE: "true"
         },
