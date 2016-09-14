@@ -69,13 +69,13 @@ function handleError(err) {
 	console.error('data:', err.data);
 }
 
-const handleStatus = async (tweet) => {
+const handleStatus = async(tweet) => {
 	const replyToTweet = tweet;
 	const message = getStatusMessage();
 	return await bot.reply(replyToTweet, message);
 };
 
-const handleDonation = async (tweet, coinTypes) => {
+const handleDonation = async(tweet, coinTypes) => {
 	const text = tweet.text;
 	const count = getCount(text, coinTypes);
 	const donator = tweet.user.screen_name;
@@ -105,8 +105,12 @@ const handleMention = (tweet) => {
 	const coinTypes = ['💰', '💵', '💶', '💷', '💴', '💸', '💳'];
 	const text = tweet.text;
 	console.log(`[Terence] Somebody mentioned me in the following tweet:\n ${text}`);
-	if (includesOne(text, coinTypes)) handleDonation(tweet, coinTypes);
-	if (text.includes('status')) handleStatus(tweet);
+	try {
+		if (includesOne(text, coinTypes)) handleDonation(tweet, coinTypes);
+		if (text.includes('status')) handleStatus(tweet);
+	} catch (e) {
+		console.log(`[Terence] Error handling mention. Error: ${e}`);
+	}
 };
 
 // Public functions
