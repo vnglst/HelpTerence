@@ -1,5 +1,3 @@
-const asyncFn = require('asyncawait/async');
-const awaitFn = require('asyncawait/await');
 const test = require('tape');
 
 const app = require('../server');
@@ -19,13 +17,13 @@ const {
 
 test('Clean up', cleanup);
 
-test('Ask Terence for a status report', asyncFn(t => {
+test('Ask Terence for a status report', async t => {
 	const tweet = {
 		user: {
 			screen_name: 'vnglst',
 		},
 	};
-	const result = awaitFn(terence.__tests.handleStatus(tweet));
+	const result = await terence.__tests.handleStatus(tweet);
 	t.ok(result, 'A status reply should be tweeted');
 	const tweetId = result.data.id_str;
 	t.ok(tweetId, 'A tweet id should be found');
@@ -34,10 +32,10 @@ test('Ask Terence for a status report', asyncFn(t => {
 			t.ok(delResult, 'Status tweet should be deleted');
 			t.end();
 		});
-}));
+});
 
-test('Donate Terence some money', asyncFn(t => {
-	const dbBot = awaitFn(BotController.createOrFindBot(botData));
+test('Donate Terence some money', async t => {
+	const dbBot = await BotController.createOrFindBot(botData);
 	t.ok(dbBot, 'A bot should be created in the database');
 	const tweet = {
 		text: 'here some 💰💰💰💵💶💷💴💸💳',
@@ -45,7 +43,7 @@ test('Donate Terence some money', asyncFn(t => {
 			screen_name: 'vnglst',
 		},
 	};
-	const result = awaitFn(terence.__tests.handleDonation(tweet, coinTypes));
+	const result = await terence.__tests.handleDonation(tweet, coinTypes);
 	t.ok(result, 'A thank you tweet should be created');
 	const tweetId = result.data.id_str;
 	t.ok(tweetId, 'A tweet id should be found');
@@ -58,10 +56,10 @@ test('Donate Terence some money', asyncFn(t => {
 			t.ok(delResult, 'Thank you tweet should be deleted');
 			t.end();
 		});
-}));
+});
 
-test('Let @vnglst donate Terence some money again', asyncFn(t => {
-	const dbBot = awaitFn(BotController.createOrFindBot(botData));
+test('Let @vnglst donate Terence some money again', async t => {
+	const dbBot = await BotController.createOrFindBot(botData);
 	t.ok(dbBot, 'A bot should be created in the database');
 	const tweet = {
 		text: '💵',
@@ -69,7 +67,7 @@ test('Let @vnglst donate Terence some money again', asyncFn(t => {
 			screen_name: 'vnglst',
 		},
 	};
-	const result = awaitFn(terence.__tests.handleDonation(tweet, coinTypes));
+	const result = await terence.__tests.handleDonation(tweet, coinTypes);
 
 	const tweetId = result.data.id_str;
 	const tweetText = result.data.text;
@@ -80,7 +78,7 @@ test('Let @vnglst donate Terence some money again', asyncFn(t => {
 			t.ok(delResult, 'Already donated tweet should be deleted');
 			t.end();
 		});
-}));
+});
 
 test('Clean up', cleanup);
 
