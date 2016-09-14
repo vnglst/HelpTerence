@@ -15,6 +15,7 @@
     "twit": "^2.2.4"
   },
   "devDependencies": {
+    "babel-cli": "^6.14.0",
     "babel-eslint": "^6.1.2",
     "babel-plugin-transform-async-to-generator": "^6.8.0",
     "babel-tape-runner": "^2.0.1",
@@ -35,8 +36,9 @@
     "lint:eslint": "eslint --ignore-path .gitignore --ignore-pattern internals/scripts",
     "lint:js": "npm run lint:eslint -- . ",
     "deploy": "npm run lint; pm2 deploy ecosystem.json production",
-    "start": "export NODE_ENV=development; nodemon server.js",
-    "debug": "export NODE_ENV=development; nodemon --debug server.js"
+    "start:watch": "export NODE_ENV=development; nodemon --exec babel-node server.js",
+    "start": "export NODE_ENV=development; babel-node server.js",
+    "debug": "export NODE_ENV=development; nodemon --debug --exec babel-node server.js"
   },
   "repository": {
     "type": "git",
