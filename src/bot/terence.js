@@ -40,11 +40,6 @@ function randomElement(array) {
 	return array[Math.floor(Math.random() * array.length)];
 }
 
-function getStatusMessage() {
-	const uptime = format(process.uptime());
-	return `still going strong, thanks for asking! Uptime: ${uptime}`;
-}
-
 function getDonationMessage(count, total) {
 	const messages = [
 		`thanks for donating ${count}! I now have ${
@@ -71,7 +66,8 @@ function handleError(err) {
 
 const handleStatus = async(tweet) => {
 	const replyToTweet = tweet;
-	const message = getStatusMessage();
+	const uptime = format(process.uptime());
+	const message = `still going strong, thanks for asking! Uptime: ${uptime}`;
 	return await bot.reply(replyToTweet, message);
 };
 
