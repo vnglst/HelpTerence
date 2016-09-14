@@ -8,7 +8,7 @@ module.exports = (app) => {
 	app.use(express.static(`${config.root}/public`));
 
 	// set views path, template engine and default layout
-	app.set('views', `${config.root}/app/views`);
+	app.set('views', `${config.root}/views`);
 	app.set('view engine', 'ejs');
 
 	if (env === 'development') {

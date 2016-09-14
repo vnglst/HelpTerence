@@ -7,7 +7,7 @@ const test = require('./env/test');
 const production = require('./env/production');
 
 const defaults = {
-	root: path.join(__dirname, '..'),
+	root: path.join(__dirname, '../..'),
 };
 
 module.exports = {

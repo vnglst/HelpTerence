@@ -39,7 +39,7 @@
         "debug": "export NODE_ENV=development; nodemon --debug --exec babel-node server.js",
 			  "clean": "rm -rf build && mkdir build",
         "build": "npm run clean && babel src -d build",
-				"serve": "export NODE_ENV=production; node build/server.js"
+				"serve": "export NODE_ENV=development; node build/server.js"
     },
     "repository": {
         "type": "git",
