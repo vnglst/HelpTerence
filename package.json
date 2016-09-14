@@ -4,7 +4,6 @@
     "description": "Help Terence the Twitter Bot",
     "main": "server.js",
     "dependencies": {
-        "asyncawait": "^1.0.6",
         "dotenv": "^2.0.0",
         "express": "^4.14.0",
         "moment": "^2.14.1",

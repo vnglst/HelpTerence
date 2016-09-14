@@ -1,7 +1,5 @@
 const DonationController = require('../api/controllers/DonationController');
 const Bot = require('./bot');
-const asyncFn = require('asyncawait/async');
-const awaitFn = require('asyncawait/await');
 
 const bot = new Bot();
 
@@ -71,13 +69,13 @@ function handleError(err) {
 	console.error('data:', err.data);
 }
 
-const handleStatus = asyncFn((tweet) => {
+const handleStatus = async (tweet) => {
 	const replyToTweet = tweet;
 	const message = getStatusMessage();
-	return awaitFn(bot.reply(replyToTweet, message));
-});
+	return await bot.reply(replyToTweet, message);
+};
 
-const handleDonation = asyncFn((tweet, coinTypes) => {
+const handleDonation = async (tweet, coinTypes) => {
 	const text = tweet.text;
 	const count = getCount(text, coinTypes);
 	const donator = tweet.user.screen_name;
@@ -88,20 +86,20 @@ const handleDonation = asyncFn((tweet, coinTypes) => {
 	};
 	const replyToTweet = tweet;
 	try {
-		const donetee = awaitFn(DonationController.createDonation(donationData));
+		const donetee = await DonationController.createDonation(donationData);
 		const total = donetee.money;
 		const message = getDonationMessage(count, total);
-		return awaitFn(bot.reply(replyToTweet, message));
+		return await bot.reply(replyToTweet, message);
 	} catch (e) {
 		if (e.message === 'Donation not allowed. Already donated today!') {
 			const message = 'sorry, you already donated today. I wouldnt want you to get poor!';
-			return awaitFn(bot.reply(replyToTweet, message));
+			return await bot.reply(replyToTweet, message);
 		}
 		// Retrow all other catched errors
 		console.log(`[Terence] Twitter error ${e}`);
 		throw e;
 	}
-});
+};
 
 const handleMention = (tweet) => {
 	const coinTypes = ['💰', '💵', '💶', '💷', '💴', '💸', '💳'];

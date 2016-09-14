@@ -10,8 +10,6 @@ require('dotenv')
 	.config();
 const express = require('express');
 const mongoose = require('mongoose');
-const asyncFn = require('asyncawait/async');
-const awaitFn = require('asyncawait/await');
 
 const terence = require('./bot/terence');
 const config = require('./config');
@@ -29,20 +27,20 @@ module.exports = app;
 require('./config/express')(app);
 require('./config/routes')(app);
 
-const listen = asyncFn(() => {
+const listen = async() => {
 	if (app.get('env') === 'test') return;
 	app.listen(port);
 	console.log(`[Express] App started on port ${port}`);
 	console.log(`[Express] Visit http://localhost:${port}`);
 	console.log(`[App] Starting in ${process.env.NODE_ENV} mode`);
 	try {
-		const botInfo = awaitFn(BotController.createOrFindBot(botData));
+		const botInfo = await BotController.createOrFindBot(botData);
 		if (botInfo) console.log(`[App] Bot found with ${botInfo.money} money bags`);
 	} catch (e) {
 		console.log(`[Express] Database error ${e}`);
 	}
 	terence.start();
-});
+};
 
 function connectToDB() {
 	const options = {

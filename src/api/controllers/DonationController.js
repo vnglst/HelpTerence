@@ -1,43 +1,41 @@
-const Donation = require('../models/Donation');
-const Bot = require('../models/Bot');
-const asyncFn = require('asyncawait/async');
-const awaitFn = require('asyncawait/await');
 const moment = require('moment');
 
-exports.createDonation = asyncFn((donationData) => {
+const Donation = require('../models/Donation');
+const Bot = require('../models/Bot');
+
+exports.createDonation = async(donationData) => {
 	const createdAt = donationData.createdAt;
-	const earlierDonation = awaitFn(
-		Donation.find({
-			fromTwitterID: donationData.fromTwitterID,
-			createdAt: {
-				$gte: moment(createdAt)
-					.startOf('day')
-					.toDate(),
-				$lt: moment(createdAt)
-					.endOf('day')
-					.toDate(),
-			},
-		})
-	);
+	const earlierDonation = await
+	Donation.find({
+		fromTwitterID: donationData.fromTwitterID,
+		createdAt: {
+			$gte: moment(createdAt)
+				.startOf('day')
+				.toDate(),
+			$lt: moment(createdAt)
+				.endOf('day')
+				.toDate(),
+		},
+	});
 	if (earlierDonation.length) {
 		throw new Error('Donation not allowed. Already donated today!');
 	}
 	const donation = new Donation(donationData);
-	const bot = awaitFn(Bot.findOne());
+	const bot = await Bot.findOne();
 	bot.money += donation.money;
-	awaitFn(donation.save());
-	return awaitFn(bot.save());
-});
+	await donation.save();
+	return await bot.save();
+};
 
-exports.index = asyncFn((req, res) => {
-	const terence = awaitFn(Bot.findOne());
-	const donations = awaitFn(Donation.find()
+exports.index = async(req, res) => {
+	const terence = await Bot.findOne();
+	const donations = await Donation.find()
 		.sort({
 			createdAt: 'desc',
 		})
-		.limit(10));
-	const count = awaitFn(Donation.count());
-	const top = awaitFn(Donation.getTopDonaters());
+		.limit(10);
+	const count = await Donation.count();
+	const top = await Donation.getTopDonaters();
 	const totalDonaters = top.length;
 	const topDonaters = top.slice(0, 10); // use only top 10
 	res.render('', {
@@ -48,4 +46,4 @@ exports.index = asyncFn((req, res) => {
 		count,
 		terence,
 	});
-});
+};
