@@ -42,20 +42,20 @@ function randomElement(array) {
 	return array[Math.floor(Math.random() * array.length)];
 }
 
-function getDonationMessage(count, total) {
+function getDonationMessage(count, total, userHandle) {
 	const messages = [
-		`thanks for donating ${count}! I now have ${
+		`Thanks for donating ${count} @${userHandle}! I now have ${
 			total} money bags! 👍`,
-		`thanks for your ${count} monies. I'm now at ${
+		`Thanks for your ${count} monies @${userHandle}. I'm now at ${
 			total} money bags!`,
-		`muchas gracias!! Including your ${
+		`Muchas gracias @${userHandle}!! Including your ${
 			count} I now have ${total} money bags! 🎉`,
-		`vielen Dank!! That's German for thank you. With those ${
+		`Vielen Dank @${userHandle}!! That's German for thank you. With those ${
 			count} I'm now at ${total} monies! 🍺`,
-		`heel erg bedankt! That's Dutch for thank you very much. With your ${
+		`Heel erg bedankt @${userHandle}! That's Dutch for thank you very much. With your ${
 			count} I'm now at ${total} monies! 🧀`,
 		`Wow, I'm now at ${total}! Thanks for those ${
-			count} monies. 👍👍`,
+			count} monies @${userHandle}. 👍👍`,
 	];
 	const message = randomElement(messages);
 	return message;
@@ -96,8 +96,13 @@ const handleDonation = async(tweet, coinTypes) => {
 	try {
 		const donetee = await DonationController.createDonation(donationData);
 		const total = donetee.money;
-		const message = getDonationMessage(count, total);
-		return await bot.reply(replyToTweet, message);
+		const userHandle = replyToTweet.user.screen_name;
+		const message = getDonationMessage(count, total, userHandle);
+		const params = {
+			status: message,
+			in_reply_to_status_id: replyToTweet.id_str,
+		};
+		return await bot.twit.post('statuses/update', params);
 	} catch (e) {
 		if (e.message === 'Donation not allowed. Already donated today!') {
 			const message = 'sorry, you already donated today. I wouldnt want you to get poor!';
