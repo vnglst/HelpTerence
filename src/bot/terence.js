@@ -75,7 +75,7 @@ const handleStatus = async(tweet) => {
 	const message = `still going strong!
 		Uptime: ${uptime}
 		# of donations: ${donationCount}
-		Pledged: ${terence.money} 💰
+		Pledged: ${terence.money}
 		Top 3 donaters:
 			1. @${(top[0] && top[0]._id) || '...'}
 			2. @${(top[1] && top[1]._id) || '...'}
